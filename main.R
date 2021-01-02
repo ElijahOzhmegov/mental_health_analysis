@@ -16,8 +16,8 @@ df = read.csv(file=here::here("data/survey.csv"))
 df %>% str(max.level=1)
 
 df = df %>% 
-    mutate(timestamp = as_datetime(timestamp)) %>% 
-    rename_all(function(.name){ .name %>% tolower() })
+    rename_all(function(.name){ .name %>% tolower() }) %>% 
+    mutate(timestamp = as_datetime(timestamp)) 
 
 df$mental_health_interview %>% levels()
 df$comments %>% levels()
@@ -26,17 +26,17 @@ df$obs_consequence %>% levels()
 
 df$treatment  %>% levels()
 
+df$gender  %>%  levels()
+gender_table = df %>% 
+    mutate(gender = tolower(gender)) %>% 
+    group_by(gender) %>% 
+    summarise(n = n()) %>% 
+    arrange(desc(n))
+
 { # TODO: transform gender to Male/Female Format
-    df$gender  %>%  levels()
-    gender_table = df %>% 
-        mutate(gender = tolower(gender)) %>% 
-        group_by(gender) %>% 
-        summarise(n = n()) %>% 
-        arrange(desc(n))
 
 
     normalize_gender <- function(input){
-#         input = "Female"
         input = tolower(input)
         gender_type = c("male", "female", "confusion")
 
@@ -58,12 +58,13 @@ df$treatment  %>% levels()
     }
 
     df = df %>% 
-        mutate(gender = map(gender, normalize_gender) %>% unlist()) %>% 
-        mutate(gender = unlist   (gender),
+        mutate(gender = map(gender, normalize_gender),
+               gender = unlist   (gender),
                gender = as.factor(gender)) 
 
 }
 
+df$gender  %>% levels()
 
 df %>% 
     select(state) %>% 
@@ -102,7 +103,7 @@ df = df %>%
     pmap(function(country, state, ...){
                 if(country != "United States") state = "None"
 
-                return(data.frame(Country, state, ...))
+                return(data.frame(country, state, ...))
               }) %>% 
     bind_rows()  %>% 
     mutate(state = as.character(state)) %>% 
@@ -145,9 +146,12 @@ imputed_df %>%
 
 
 imputed_df %>% summarise_all(~ sum(is.na(.)))
-df$Country  %>% levels()
+df$country  %>% levels()
+imputed_df$country
 
 df = imputed_df
+df %>% glimpse()
+
 
 
 

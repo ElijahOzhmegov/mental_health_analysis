@@ -16,7 +16,8 @@ df = read.csv(file=here::here("data/survey.csv"))
 df %>% str(max.level=1)
 
 df = df %>% 
-    mutate(Timestamp = as_datetime(Timestamp))
+    mutate(timestamp = as_datetime(timestamp)) %>% 
+    rename_all(function(.name){ .name %>% tolower() })
 
 df$mental_health_interview %>% levels()
 df$comments %>% levels()
@@ -26,10 +27,10 @@ df$obs_consequence %>% levels()
 df$treatment  %>% levels()
 
 { # TODO: transform gender to Male/Female Format
-    df$Gender  %>%  levels()
+    df$gender  %>%  levels()
     gender_table = df %>% 
-        mutate(Gender = tolower(Gender)) %>% 
-        group_by(Gender) %>% 
+        mutate(gender = tolower(gender)) %>% 
+        group_by(gender) %>% 
         summarise(n = n()) %>% 
         arrange(desc(n))
 
@@ -57,9 +58,9 @@ df$treatment  %>% levels()
     }
 
     df = df %>% 
-        mutate(Gender = map(Gender, normalize_gender) %>% unlist()) %>% 
-        mutate(Gender = unlist   (Gender),
-               Gender = as.factor(Gender)) 
+        mutate(gender = map(gender, normalize_gender) %>% unlist()) %>% 
+        mutate(gender = unlist   (gender),
+               gender = as.factor(gender)) 
 
 }
 
@@ -79,7 +80,7 @@ df %>% nrow()
 df %>% summarise_all(~ sum(is.na(.)))
 
 df %>% 
-    group_by(Country) %>% 
+    group_by(country) %>% 
     summarise(total   = n(),
               missing = sum(is.na(state))) %>% 
     arrange(desc(total))
@@ -98,8 +99,8 @@ df %>%
 
 df = df %>% select(-comments)
 df = df %>% 
-    pmap(function(Country, state, ...){
-                if(Country != "United States") state = "None"
+    pmap(function(country, state, ...){
+                if(country != "United States") state = "None"
 
                 return(data.frame(Country, state, ...))
               }) %>% 
@@ -145,6 +146,8 @@ imputed_df %>%
 
 imputed_df %>% summarise_all(~ sum(is.na(.)))
 df$Country  %>% levels()
+
+df = imputed_df
 
 
 

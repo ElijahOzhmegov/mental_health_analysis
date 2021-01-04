@@ -205,9 +205,35 @@ print(boruta.df)
     mtext("Variable Importance", side = 3, line = 1, cex = 1.2)
 }
 
+{ # TODO: use only not rejected features
+    rejected = boruta.df$finalDecision == "Rejected"
+    names_to_select = boruta.df$finalDecision[!rejected] %>%
+        unlist() %>% 
+        names()
+
+    tdf = df %>% 
+        select(treatment, all_of(names_to_select))
+
+}
 
 
+tdf = df
 
+install.packages("ggcorrplot")
+library(ggcorrplot)
+model.matrix(~0+., data=tdf %>% select(-country)) %>% 
+  cor(use="pairwise.complete.obs") %>% 
+  ggcorrplot(show.diag = F, type="lower", 
+             lab=FALSE, lab_size=1, tl.cex=7,
+  tl.srt=45)
+
+model.matrix(~0+., data=tdf %>% select(country)) %>% 
+  cor(use="pairwise.complete.obs") %>% 
+  ggcorrplot(show.diag = F, type="upper", 
+             lab=FALSE, lab_size=1, tl.cex=7,
+  tl.srt=45)
+
+# 3 Train the models
 
 
 

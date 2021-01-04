@@ -152,6 +152,34 @@ imputed_df$country
 df = imputed_df
 df %>% glimpse()
 
+# 2 What are features the most important? ================================================
+# Here I will use Boruta algorithm and correlation matrix
+library(Boruta)
+
+boruta.df <- Boruta(treatment ~ ., data=df, doTrace=2, maxRuns=250)
+print(boruta.df)
+
+{
+    par(mar = c(10, 3, 3, 3))
+    plot(boruta.df, xlab = "", xaxt = "n")
+    grid (NULL,NULL, lty = 6, col = "cornsilk2") 
+    lz <- lapply(1:ncol(boruta.df$ImpHistory), function(i) boruta.df$ImpHistory[is.finite(boruta.df$ImpHistory[,i]),i])
+    names(lz) <- colnames(boruta.df$ImpHistory)
+    Labels    <- sort(sapply(lz, median))
+    axis(side = 1, las = 2, labels = names(Labels), at = 1:ncol(boruta.df$ImpHistory), cex.axis = 0.7)
+    mtext("Variable Importance", side = 3, line = 1, cex = 1.2)
+}
+
+
+df %>% 
+    filter(age > 0) %>% 
+    filter(age < 100) %>% 
+    group_by(age) %>% 
+    summarise(n = n()) %>% 
+    arrange(desc(n)) %>% 
+    ggplot(aes(age, n)) +
+    geom_point()
+    geom_line()
 
 
 

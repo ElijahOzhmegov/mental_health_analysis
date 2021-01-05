@@ -216,10 +216,11 @@ print(boruta.df)
 
 }
 
+tdf %>% str(max.level=2)
 
-tdf = df
+df = tdf
 
-install.packages("ggcorrplot")
+# install.packages("ggcorrplot")
 library(ggcorrplot)
 model.matrix(~0+., data=tdf %>% select(-country)) %>% 
   cor(use="pairwise.complete.obs") %>% 
@@ -233,9 +234,199 @@ model.matrix(~0+., data=tdf %>% select(country)) %>%
              lab=FALSE, lab_size=1, tl.cex=7,
   tl.srt=45)
 
-# 3 Train the models
+# 3 Train the models (RF and SVM) ========================================================
+library(tidymodels)
+
+df %>% str(max.level=2)
+
+df %<>% mutate(treatment = as.character(treatment))
+
+set.seed(0)
+df_split <- initial_split(df, prop=4/5)
+df_train <- training(df_split)
+df_test  <- testing (df_split)
+
+df_cv <- vfold_cv(df_train, strata=treatment, v=5)
+
+#
+# Random Forest
+#
+
+{ # random forest model
+    rf_recipe <- df %>% 
+        recipe(treatment ~ .)
+
+    rf_model <- rand_forest() %>% 
+        set_args(mtry = tune()) %>% 
+        set_engine("ranger", importance = "impurity") %>% 
+        set_mode("classification")
+
+    rf_workflow <- workflow() %>% 
+        add_recipe(rf_recipe) %>% 
+        add_model(rf_model)
+
+    rf_grid  <- expand.grid(mtry=2:10)
+
+    rf_tune_results <- rf_workflow %>% 
+        tune_grid(resamples = df_cv,
+                  grid      = rf_grid,
+                  control   = control_grid(save_pred = TRUE, verbose = TRUE),
+                  metrics   = metric_set(accuracy, recall, roc_auc))
+
+}
+
+
+{ # plot the penalty plot
+    rf_plot  <- 
+        rf_tune_results %>% 
+        collect_metrics() %>% 
+#         filter(.metric == "accuracy") %>% 
+        ggplot(aes(x = mtry, y = mean)) +
+        geom_point() +
+        geom_line() +
+        facet_wrap(~.metric) +
+#         ylab("AUC the ROC Curve") +
+        theme_bw()
+
+    rf_plot
+
+}
+
+
+{ # choosing the best parameter and building the final model
+    param_final  <- rf_tune_results %>% 
+        select_best(metric = "roc_auc")
+
+    rf_fit  <- rf_workflow %>% 
+        finalize_workflow(param_final) %>% 
+        last_fit(df_split)
+
+}
+
+{ # draw ROC
+    rf_auc <- rf_fit %>% 
+        collect_predictions() %>% 
+        roc_curve(treatment, .pred_No) %>% 
+        mutate(model = "Random Forest")
+    roc_plot <- autoplot(rf_auc)
+
+    roc_plot
+}
+
+{ # validation
+    test_performance <- rf_fit %>% 
+        collect_metrics(); test_performance
+
+    test_predictions <- rf_fit %>% 
+        collect_predictions(); test_predictions
+
+    test_predictions %>% conf_mat(truth = treatment, estimate = .pred_class)
+
+    test_predictions %>% 
+        ggplot() +
+        geom_density(aes(x = .pred_Yes, fill = treatment), alpha=0.5) +
+        theme_bw()
 
 
 
+}
 
+
+# 
+# SVM
+# 
+
+{ # svm model
+    svm_recipe <- df %>% 
+        recipe(treatment ~ .)  %>% 
+        step_zv(all_predictors()) #%>% 
+#         step_lincomb(all_numeric())
+
+
+    svm_model <-
+        svm_rbf(cost = tune(), rbf_sigma = tune()) %>%
+        set_mode("classification") %>%
+        set_engine("kernlab")
+
+    svm_workflow <- workflow() %>% 
+        add_recipe(svm_recipe) %>% 
+        add_model(svm_model)
+
+    ctrl <- control_grid(verbose = TRUE, save_pred = TRUE)
+
+    svm_tune_results <- svm_workflow %>% 
+      tune_grid(resamples = df_cv,
+        metrics = metric_set(accuracy, roc_auc),
+        control = ctrl
+      )
+
+}
+
+{ # plot the penalty plot
+    svm_plot_cost  <- 
+        svm_tune_results %>% 
+        collect_metrics() %>% 
+#         filter(.metric == "roc_auc") %>% 
+        ggplot(aes(x = cost, y = mean)) +
+        geom_point() +
+        geom_line() +
+        facet_wrap(~.metric) +
+#         ylab("AUC the ROC Curve") +
+        theme_bw() +
+        ggtitle("Tuning regarding to Cost")
+
+
+    svm_plot_sigma  <- 
+        svm_tune_results %>% 
+        collect_metrics() %>% 
+#         filter(.metric == "roc_auc") %>% 
+        ggplot(aes(x = rbf_sigma, y = mean)) +
+        geom_point() +
+        geom_line() +
+        facet_wrap(~.metric) +
+#         ylab("AUC the ROC Curve") +
+        theme_bw() +
+        ggtitle("Tuning regarding to Sigma")
+
+    gridExtra::grid.arrange(svm_plot_cost, svm_plot_sigma, nrow = 2)
+
+}
+
+{ # choosing the best parameter and building the final model
+    param_final  <- svm_tune_results %>% 
+        select_best(metric = "roc_auc")
+
+    svm_fit  <- svm_workflow %>% 
+        finalize_workflow(param_final) %>% 
+        last_fit(df_split)
+
+}
+
+{ # draw ROC
+    svm_auc <- svm_fit %>% 
+        collect_predictions() %>% 
+        roc_curve(treatment, .pred_No) %>% 
+        mutate(model = "Random Forest")
+    roc_plot <- autoplot(svm_auc)
+
+    roc_plot
+}
+
+{ # validation
+    test_performance <- svm_fit %>% 
+        collect_metrics(); test_performance
+
+    test_predictions <- svm_fit %>% 
+        collect_predictions(); test_predictions
+
+    test_predictions %>% conf_mat(truth = treatment, estimate = .pred_class)
+
+    test_predictions %>% 
+        ggplot() +
+        geom_density(aes(x = .pred_Yes, fill = treatment), alpha=0.5) +
+        theme_bw()
+
+
+
+}
 

@@ -451,3 +451,30 @@ df_cv <- vfold_cv(df_train, strata=treatment, v=5)
 
 }
 
+
+{ # Testing
+    treatment_fit <- fit(rf_workflow, data=df_train)
+
+    predicted = predict(treatment_fit, df_test)
+    accuracy = sum(df_test$treatment == predicted)/nrow(predicted)
+    accuracy
+
+    real = tibble(treatment = df_test$treatment) %>% 
+        mutate(treatment = as.factor(treatment))
+
+    c_mat = bind_cols(real, predicted) %>% 
+        conf_mat(truth = treatment, estimate = .pred_class)
+
+    acc = conf_mat
+
+
+    library(caret) 
+    confusionMatrix(c_mat)
+    conf_matrix = matrix(c_mat$table, nrow = 2)
+    acc = sum(diag(conf_matrix) / sum(conf_matrix))
+    apply(conf_matrix, 2, sum)
+    diag(conf_matrix) / apply(conf_matrix, 2, sum) / 2
+    pre = sum(diag(conf_matrix) / apply(conf_matrix, 2, sum)) / 2
+    diag(conf_matrix)
+}
+

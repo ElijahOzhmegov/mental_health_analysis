@@ -303,12 +303,22 @@ df_cv <- vfold_cv(df_train, strata=treatment, v=5)
 
 }
 
+{ # calculate AUC
+    roc_obj = rf_fit %>% 
+        collect_predictions() %>% 
+        pROC::roc(treatment, .pred_Yes)
+    auc_metric = pROC::auc(roc_obj)[[1]]
+
+
+}
+
 { # draw ROC
     rf_auc <- rf_fit %>% 
         collect_predictions() %>% 
         roc_curve(treatment, .pred_No) %>% 
         mutate(model = "Random Forest")
-    roc_plot <- autoplot(rf_auc)
+    roc_plot <- autoplot(rf_auc) + 
+        ggtitle(paste0(c("RF model: AUC", round(auc_metric, 3)), collapse=" "))
 
     roc_plot
 }
@@ -402,14 +412,25 @@ df_cv <- vfold_cv(df_train, strata=treatment, v=5)
 
 }
 
+{ # calculate AUC
+    install.packages("pROC")
+    roc_obj = svm_tune_results %>% 
+        collect_predictions(parameters = param_final)  %>% 
+        pROC::roc(treatment, .pred_Yes)
+    auc_metric = pROC::auc(roc_obj)[[1]]
+
+
+}
+
 { # draw ROC
     svm_auc <- svm_fit %>% 
         collect_predictions() %>% 
         roc_curve(treatment, .pred_No) %>% 
         mutate(model = "Random Forest")
-    roc_plot <- autoplot(svm_auc)
+    roc_plot <- autoplot(svm_auc) +
+        ggtitle(paste0(c("SVM model: AUC", round(auc_metric, 3)), collapse=" "))
 
-    roc_plot
+    roc_plot 
 }
 
 { # validation

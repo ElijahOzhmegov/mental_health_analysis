@@ -1,0 +1,153 @@
+---
+title: "Mental Health in Tech"
+author: "Ilia Ozhmegov"
+date: "January 6, 2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(max.print=100)
+```
+
+## Introduction
+
+
+Mental Health is a very important matter that became even more since COVID as the majority of urban people have to work from home since there is no difference between working place and relaxing place. And as a result it affect mental health in one or another way.
+
+Customer placed the following questions to me:
+
+* What is the most important factors to define the necessity of mental treatment?
+* Is it possible to build any ML model based on those feature to evaluate the risk of mental health problems?
+* What accuracy would be of a model if it is possible?
+
+## Data and Preprocessing (cleaning, missing values, recoding)
+
+```{r load libraries and dataset}
+library(tidyverse)
+library(lubridate)
+library(magrittr)
+library(stringdist)
+library(recipes)
+
+
+df = read.csv(file=here::here("data/survey.csv"))
+```
+
+| Feature name	| Description |
+| ---- | ---- |
+| Timestamp	| - |
+| Age	| - |
+| Gender	| - |
+| Country	| - |
+| State	| (only for US) |
+| Self employed	| Are you self-employed? |
+| Family history	| Family history of mental illness |
+| Work interfere	| Is mental health condition affects work? |
+| No employees	| The number of employees in your company or organization |
+| Remote work	| Having remote work (outside of an office) at least 50% of the time |
+| Tech company	| The employer is primarily a tech company/organization |
+| Benefits	| Providing mental health benefits by the employer |
+| Care options:	| Providing options for mental health care by the employer |
+| Wellness program	| Discussion about mental health as part of an employee wellness program by the employes |
+| Seek help	| Providing resources by the employer to learn more about mental health issues and how to seek help |
+| Anonymity	| Protecting anonymity if you choose to take advantage of mental health or substance abuse treatment resources |
+| Leave	| How easy is it for you to take medical leave for a mental health condition? |
+| Mental-health consequence:	| Having negative consequences caused by discussing a mental health issue with your employer |
+| Phys-health consequence	| Having negative consequences caused by discussing a physical health issue with your employer |
+| Coworkers	| Would you be willing to discuss a mental health issue with your coworkers? |
+| Supervisor	| Would you be willing to discuss a mental health issue with your direct supervisor(s)? |
+| Mental health interview:	| Would you bring up a mental health issue with a potential employer in an interview? |
+| Phys health interview	| Would you bring up a physical health issue with a potential employer in an interview? |
+| Mental vs Physical	| Do you feel that your employer takes mental health as seriously as physical health? |
+| Obs consequence	| Have you heard of or observed negative consequences for coworkers with mental health conditions in your workplace? |
+| Comments	| Any additional notes or comments |
+| Treatment	| Is treatment for a mental health condition was? |
+
+
+### Data Frame structure
+
+
+```{r how variable look like}
+df %>% str(max.level=2)
+
+```
+
+### Preprocessing
+
+As you could notice feature names are differ, so we will make them in the same format.
+
+```{r rename all variables}
+
+df = df %>% 
+    rename_all(function(.name){ .name %>% tolower() }) %>% 
+    mutate(timestamp = as_datetime(timestamp)) 
+
+df %>% str(max.level=2)
+
+```
+
+#### Preprocessing: gender issue
+
+There are some issues with variable `gender`.
+
+```{r check gender, R.options = list(width = 300)}
+df %>% 
+    group_by(gender) %>% 
+    summarise(n = n(), .groups="drop") %>% 
+    arrange(desc(n)) %>% 
+    head(20)
+
+```
+
+So I solved this issue with the following approach:
+
+```{r}
+
+# TODO: transform gender to Male/Female/Other Format
+
+
+normalize_gender <- function(input){
+    input = tolower(input)
+    gender_type = c("male", "female", "confusion")
+
+    if(all(input == gender_type[1])) return(gender_type[1])
+    if(all(input == gender_type[2])) return(gender_type[2])
+
+    male_word_pool      = c("male", "man", "guy", "m")
+    female_word_pool    = c("female", "woman", "girl", "f")
+    confusing_word_pool = c("trans", "agender", "fluid", "queer", "binary", "na", "all", "p", "unsure")
+
+    male_value   = min(stringdist::stringdist(input, male_word_pool,       "jaccard"))
+    female_value = min(stringdist::stringdist(input, female_word_pool,     "jaccard"))
+    confusion_value  = min(stringdist::stringdist(input, confusing_word_pool,  "jaccard"))
+
+    i = which.min(c(male_value, female_value, confusion_value))
+
+    return(gender_type[i])
+
+}
+
+df = df %>% 
+    mutate(gender = map(gender, normalize_gender),
+           gender = unlist   (gender),
+           gender = as.factor(gender)) 
+
+```
+
+Here I measured the distance between words with `jaccard` metric. It outputs the value between 0 and 1.
+The closer words the lesser value.
+
+Now we have it in the following way
+
+```{r check gender again, R.options = list(width = 300)}
+df %>% 
+    group_by(gender) %>% 
+    summarise(n = n(), .groups="drop") %>% 
+    arrange(desc(n)) %>% 
+    head(20)
+
+```
+
+#### Preprocessing: age issue
+

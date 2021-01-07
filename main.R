@@ -317,10 +317,10 @@ df_cv <- vfold_cv(df_train, strata=treatment, v=5)
         collect_predictions() %>% 
         roc_curve(treatment, .pred_No) %>% 
         mutate(model = "Random Forest")
-    roc_plot <- autoplot(rf_auc) + 
+    rf_roc_plot <- autoplot(rf_auc) + 
         ggtitle(paste0(c("RF model: AUC", round(auc_metric, 3)), collapse=" "))
 
-    roc_plot
+    rf_roc_plot
 }
 
 { # validation

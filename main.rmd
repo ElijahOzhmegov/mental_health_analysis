@@ -21,7 +21,7 @@ Customer placed the following questions to me:
 * Is it possible to build any ML model based on those feature to evaluate the risk of mental health problems?
 * What accuracy would be of a model if it is possible?
 
-## Data and Preprocessing (cleaning, missing values, recoding)
+## Data and Preprocessing (cleaning, imputing missing values)
 
 ```{r load libraries and dataset}
 library(tidyverse)
@@ -150,4 +150,460 @@ df %>%
 ```
 
 #### Preprocessing: age issue
+
+There is some entries with wrong age.
+Some of them are negative and some of them are too big.
+
+```{r age issue, warning=FALSE}
+
+p1 = df %>% 
+    ggplot(aes(age)) + 
+    geom_density() +
+    scale_x_continuous(trans='log10') +
+    ggtitle("Age distribution") +
+    labs(x="Age, years") +
+    theme_bw()
+
+
+p2 = df %>% 
+    filter(age > 0) %>% 
+    filter(age < 100) %>% 
+    ggplot(aes(x=age)) +
+      geom_histogram(alpha=0.5, position="identity", bins = 40) +
+      theme_bw() +
+      labs(x="Age, years") +
+      ggtitle("Age histogram, enlarged between 0 and 100")
+
+gridExtra::grid.arrange(p1, p2, nrow=2)
+
+```
+
+As the solution I just get rid of entries that outside of `[18, 100)` range
+
+```{r age solution}
+
+# TODO: remove outlier entries by age
+
+before = df %>% nrow()
+
+df %<>% 
+    filter(age > 17) %>% 
+    filter(age < 100)  
+
+after = df %>% nrow()
+
+cat("Were thrown", before - after, "entries\n")
+
+```
+
+#### Imputing: evaluate missing values
+
+To evaluate the number of missing values per column the following approach will be used:
+
+```{r missing evaluattion}
+df %>% glimpse()
+df %>% summarise_all(~ sum(is.na(.)))
+
+```
+
+It is better to get rid of feature `comments` as more than 85 % (1095/1259)of comments are NA
+and impute feature `work_interfere` and `state` but the last one only for USA for the rest countries 
+we will use `None`.
+
+```{r droping and filling with None} 
+    df = df %>% 
+        select(-comments) %>% 
+        pmap(function(country, state, ...){
+                 if(country != "United States") state = "None"
+
+                 return(data.frame(country, state, ...))
+          }) %>% 
+    bind_rows()  %>% 
+    mutate(state = as.character(state)) %>% 
+    mutate(state = as.factor   (state))
+
+df$state  %>% levels() # now you can see "None"
+
+```
+
+#### Imputing
+
+It is important to mark that certain values for some variables used to be `NA`.
+
+
+```{r marking NA}
+
+check_NA <- function(value) ifelse(is.na(value), "yes", "no")
+
+df = df %>% 
+    mutate(
+           isNAstate          = check_NA(state),
+           isNAself_employed  = check_NA(self_employed),
+           isNAwork_interfere = check_NA(work_interfere),
+
+           isNAstate          = as.factor(isNAstate),
+           isNAself_employed  = as.factor(isNAself_employed),
+           isNAwork_interfere = as.factor(isNAwork_interfere),
+    )
+
+df %>% glimpse()
+```
+
+Now you can see dummy variables that start with `isNA`. Perhaps it would be 
+better to name those `wasNA`.
+
+Now, imputation step. Here will be used k-nn approach to fill NA wit something sane.
+
+```{r imputing}
+
+impute_recipe  <- df %>% 
+    recipe(treatment ~ .) %>% 
+    step_knnimpute(all_predictors(), neighbors = 3)
+
+imputed_df = impute_recipe %>% 
+    prep() %>% 
+    juice()
+
+imputed_df %>% 
+    summarise_all(~ sum(is.na(.))) %>% 
+    sum() # The common number of NAs across the whole df
+
+df = imputed_df
+
+df %>% glimpse()
+```
+
+## Feature selection
+
+Now we should evaluate which variables are more influential over target variable.
+To do that we will use Boruta algorithm which uses a random forest.
+
+```{r boruta, fig.height=12, fig.width=16}
+
+library(Boruta)
+
+if(FALSE){
+    boruta.df <- Boruta(treatment ~ ., data=df, doTrace=1, maxRuns=300)
+    save(boruta.df, file=here::here("models/boruta.df.rda"))
+}else{
+    load(here::here("models/boruta.df.rda"))
+}
+print(boruta.df)
+
+{
+    par(mar = c(25, 3, 3, 3))
+    plot(boruta.df, xlab = "", xaxt = "n")
+    grid (NULL,NULL, lty = 6, col = "cornsilk2") 
+    lz <- lapply(1:ncol(boruta.df$ImpHistory), function(i) boruta.df$ImpHistory[is.finite(boruta.df$ImpHistory[,i]),i])
+    names(lz) <- colnames(boruta.df$ImpHistory)
+    Labels    <- sort(sapply(lz, median))
+    axis(side = 1, las = 2, labels = names(Labels), at = 1:ncol(boruta.df$ImpHistory), cex.axis = 2)
+    mtext("Variable Importance", side = 3, line = 1, cex = 2)
+}
+
+```
+
+Here green whisker plots mark variables that should be taken into the model.
+
+* Yellow variables are tentative variables.
+* Read variables are unimportant.
+* Blue variables are shadow metrics.
+
+According to the plot above such variables as `work_interfere` and `family_history` are 
+significantly more important than the rest.
+
+
+## Feature dependence 
+
+Further we will use only the most important features (marked green).
+
+```{r use not rejected features}
+
+# TODO: use only not rejected features
+rejected = boruta.df$finalDecision == "Rejected"
+names_to_select = boruta.df$finalDecision[!rejected] %>%
+    unlist() %>% 
+    names()
+
+df = df %>% 
+    select(treatment, all_of(names_to_select))
+
+df %>% str(max.level=2)
+```
+
+If absolute dependence between features close to 0.9 one of those features should be removed.
+It can seen on the plot below.
+
+```{r correlation matrix, warning=FALSE}
+
+library(ggcorrplot)
+model.matrix(~0+., data=df %>% select(-country)) %>% 
+  cor(use="pairwise.complete.obs") %>% 
+  ggcorrplot(show.diag = F, type="lower", 
+             lab=FALSE, lab_size=1, tl.cex=7,
+  tl.srt=45)
+
+model.matrix(~0+., data=df %>% select(country)) %>% 
+  cor(use="pairwise.complete.obs") %>% 
+  ggcorrplot(show.diag = F, type="upper", 
+             lab=FALSE, lab_size=1, tl.cex=7,
+  tl.srt=45)
+```
+
+Here `country` feature and the rest features were separated to show these areas more closely.
+However there is no correlation between `country` and the rest so ploting those together 
+wouldn't make much sense.
+
+You could notice strong correlation between `treatmentNo` and `treatmentYes` as well as 
+`genderfemale` and `gendermale`. Because these variables are complementary.
+
+At the there no evidence to exclude any variables.
+
+
+## Model building
+
+Is it possible to build any ML model based on those feature to evaluate the risk of mental health problems?
+
+Before building any model we should split original dataset into training and testing.
+
+```{r dataset splitting}
+library(tidymodels)
+
+df %<>% mutate(treatment = as.character(treatment)) # to make it work
+
+set.seed(0)
+df_split <- initial_split(df, prop=4/5)
+df_train <- training(df_split)
+df_test  <- testing (df_split)
+
+df_cv <- vfold_cv(df_train, strata=treatment, v=5)
+
+```
+
+### Random Forest Model
+
+Classical approach. It is alway a good baseline.
+
+```{r RF}
+df %>% glimpse()
+
+{ # random forest model
+    rf_recipe <- df %>% 
+        recipe(treatment ~ .)
+
+    rf_model <- rand_forest() %>% 
+        set_args(mtry = tune()) %>% 
+        set_engine("ranger", importance = "impurity") %>% 
+        set_mode("classification")
+
+    rf_workflow <- workflow() %>% 
+        add_recipe(rf_recipe) %>% 
+        add_model(rf_model)
+
+    rf_grid  <- expand.grid(mtry=2:10)
+
+    rf_tune_results <- rf_workflow %>% 
+        tune_grid(resamples = df_cv,
+                  grid      = rf_grid,
+                  control   = control_grid(save_pred = TRUE, verbose = FALSE),
+                  metrics   = metric_set(accuracy, roc_auc))
+
+}
+
+
+{ # plot the penalty plot
+    rf_plot  <- 
+        rf_tune_results %>% 
+        collect_metrics() %>% 
+        ggplot(aes(x = mtry, y = mean)) +
+        geom_point() +
+        geom_line() +
+        facet_wrap(~.metric) +
+        theme_bw()
+
+    rf_plot
+
+}
+
+{ # choosing the best parameter and building the final model
+    param_final  <- rf_tune_results %>% 
+        select_best(metric = "roc_auc")
+
+    rf_fit  <- rf_workflow %>% 
+        finalize_workflow(param_final) %>% 
+        last_fit(df_split)
+
+}
+
+{ # calculate AUC
+    roc_obj = rf_fit %>% 
+        collect_predictions() %>% 
+        pROC::roc(treatment, .pred_Yes)
+    auc_metric = pROC::auc(roc_obj)[[1]]
+
+
+}
+
+{ # draw ROC
+    rf_auc <- rf_fit %>% 
+        collect_predictions() %>% 
+        roc_curve(treatment, .pred_No) %>% 
+        mutate(model = "Random Forest")
+    rf_roc_plot <- autoplot(rf_auc) + 
+        ggtitle(paste0(c("RF model: AUC", round(auc_metric, 3)), collapse=" "))
+
+    rf_roc_plot
+}
+
+{ # validation
+    test_performance <- rf_fit %>% 
+        collect_metrics(); test_performance
+
+    test_predictions <- rf_fit %>% 
+        collect_predictions()
+
+    test_predictions %>% conf_mat(truth = treatment, estimate = .pred_class)
+
+    test_predictions %>% 
+        ggplot() +
+        geom_density(aes(x = .pred_Yes, fill = treatment), alpha=0.5) +
+        theme_bw() +
+        ggtitle("Random Forest prediction distribution") 
+
+}
+
+```
+
+Almost a perfect distribution!
+
+### SVM model
+
+```{r svm model}
+
+{ # svm model
+    svm_recipe <- df %>% 
+        recipe(treatment ~ .)  %>% 
+        step_zv(all_predictors()) #%>% 
+#         step_lincomb(all_numeric())
+
+    svm_model <-
+        svm_rbf(cost = tune(), rbf_sigma = tune()) %>%
+        set_mode("classification") %>%
+        set_engine("kernlab")
+
+    svm_workflow <- workflow() %>% 
+        add_recipe(svm_recipe) %>% 
+        add_model(svm_model)
+
+    ctrl <- control_grid(verbose = FALSE, save_pred = TRUE)
+
+    svm_tune_results <- svm_workflow %>% 
+      tune_grid(resamples = df_cv,
+        metrics = metric_set(accuracy, roc_auc),
+        control = ctrl
+      )
+
+}
+
+{ # plot the penalty plot
+    svm_plot_cost  <- 
+        svm_tune_results %>% 
+        collect_metrics() %>% 
+#         filter(.metric == "roc_auc") %>% 
+        ggplot(aes(x = cost, y = mean)) +
+        geom_point() +
+        geom_line() +
+        facet_wrap(~.metric) +
+#         ylab("AUC the ROC Curve") +
+        theme_bw() +
+        ggtitle("Tuning regarding to Cost")
+
+
+    svm_plot_sigma  <- 
+        svm_tune_results %>% 
+        collect_metrics() %>% 
+#         filter(.metric == "roc_auc") %>% 
+        ggplot(aes(x = rbf_sigma, y = mean)) +
+        geom_point() +
+        geom_line() +
+        facet_wrap(~.metric) +
+#         ylab("AUC the ROC Curve") +
+        theme_bw() +
+        ggtitle("Tuning regarding to Sigma")
+
+    gridExtra::grid.arrange(svm_plot_cost, svm_plot_sigma, nrow = 2)
+
+}
+
+{ # choosing the best parameter and building the final model
+    param_final  <- svm_tune_results %>% 
+        select_best(metric = "roc_auc")
+
+    svm_fit  <- svm_workflow %>% 
+        finalize_workflow(param_final) %>% 
+        last_fit(df_split)
+
+}
+
+{ # calculate AUC
+    install.packages("pROC")
+    roc_obj = svm_tune_results %>% 
+        collect_predictions(parameters = param_final)  %>% 
+        pROC::roc(treatment, .pred_Yes)
+    auc_metric = pROC::auc(roc_obj)[[1]]
+
+
+}
+
+{ # draw ROC
+    svm_auc <- svm_fit %>% 
+        collect_predictions() %>% 
+        roc_curve(treatment, .pred_No) %>% 
+        mutate(model = "Random Forest")
+    roc_plot <- autoplot(svm_auc) +
+        ggtitle(paste0(c("SVM model: AUC", round(auc_metric, 3)), collapse=" "))
+
+    roc_plot 
+}
+
+{ # validation
+    test_performance <- svm_fit %>% 
+        collect_metrics(); test_performance
+
+    test_predictions <- svm_fit %>% 
+        collect_predictions(); test_predictions
+
+    test_predictions %>% conf_mat(truth = treatment, estimate = .pred_class)
+
+    test_predictions %>% 
+        ggplot() +
+        geom_density(aes(x = .pred_Yes, fill = treatment), alpha=0.5) +
+        theme_bw() +
+        ggtitle("SVM prediction distribution")
+
+
+
+}
+```
+
+You can see that RF model and SVM model have close AUC ROC and accuracy. 
+But the prediction distribution for SVM looks a bit more sparse, so out 
+of these 2 models we will proceed with RF model.
+
+### Random Forest testing
+
+```{r testing} 
+
+{ # Testing
+    treatment_fit <- fit(rf_workflow, data=df_train)
+
+    predicted = predict(treatment_fit, df_test)
+    accuracy = sum(df_test$treatment == predicted)/nrow(predicted)
+    accuracy
+
+}
+
+```
+
+
 

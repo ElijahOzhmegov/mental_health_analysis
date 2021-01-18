@@ -254,17 +254,18 @@ df = tdf
 
 # install.packages("ggcorrplot")
 library(ggcorrplot)
-model.matrix(~0+., data=tdf %>% select(-country)) %>% 
-  cor(use="pairwise.complete.obs") %>% 
-  ggcorrplot(show.diag = F, type="lower", 
-             lab=FALSE, lab_size=1, tl.cex=7,
-  tl.srt=45)
+{ # Draw correlation matrix
 
-model.matrix(~0+., data=tdf %>% select(country)) %>% 
-  cor(use="pairwise.complete.obs") %>% 
-  ggcorrplot(show.diag = F, type="upper", 
-             lab=FALSE, lab_size=1, tl.cex=7,
-  tl.srt=45)
+    model.matrix(~0+., data=df %>%  select(-country)) %>% 
+      cor(use="pairwise.complete.obs") %>% 
+      ggcorrplot(show.diag = F, type="full", 
+                 lab=FALSE, lab_size=1, tl.cex=8, tl.srt=45,
+      ) +
+    ggtitle("Correlation Matrix") +
+    theme(plot.title = element_text(size = 20, hjust = 0.5))
+    if(tosave)ggsave("pics/correlation_matrix_without_county.svg")
+
+}
 
 # 3 Train the models (RF and SVM) ========================================================
 library(tidymodels)

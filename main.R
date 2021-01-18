@@ -15,7 +15,6 @@
 
     df = read.csv(file=here::here("data/survey.csv"))
 }
-df %>% str(max.level=1)
 
 {
     df = df %>% 
@@ -169,7 +168,7 @@ df %>% glimpse()
 {
     impute_recipe  <- df %>% 
         recipe(treatment ~ .) %>% 
-        step_knnimpute(all_predictors(), neighbors = 3)
+        step_impute_knn(all_predictors(), neighbors = 3)
 
     imputed_df = impute_recipe %>% 
         prep() %>% 
@@ -194,16 +193,49 @@ library(Boruta)
 boruta.df <- Boruta(treatment ~ ., data=df, doTrace=2, maxRuns=300)
 print(boruta.df)
 
-{
-    par(mar = c(10, 3, 3, 3))
-    plot(boruta.df, xlab = "", xaxt = "n")
-    grid (NULL,NULL, lty = 6, col = "cornsilk2") 
-    lz <- lapply(1:ncol(boruta.df$ImpHistory), function(i) boruta.df$ImpHistory[is.finite(boruta.df$ImpHistory[,i]),i])
-    names(lz) <- colnames(boruta.df$ImpHistory)
-    Labels    <- sort(sapply(lz, median))
-    axis(side = 1, las = 2, labels = names(Labels), at = 1:ncol(boruta.df$ImpHistory), cex.axis = 0.7)
-    mtext("Variable Importance", side = 3, line = 1, cex = 1.2)
-}
+    { # Calculate stats for features
+        imp.history = boruta.df$ImpHistory
+        lz <- lapply(1:ncol(imp.history), 
+                     function(i) imp.history[is.finite(imp.history[,i]),i])
+        names(lz) <- colnames(boruta.df$ImpHistory)
+        Labels    <- sort(sapply(lz, median))
+        rm(imp.history)
+    }
+
+    
+    tosave = TRUE
+    { # Plot feature importance whisker plot
+        if(tosave){
+#             png(filename="pics/feature_importance.png", width=1280,height=720)
+            svg(filename="pics/feature_importance.svg", width=16, height=9)
+
+            ticks_cex = 2
+            title_cex = 3
+        }else{
+
+            ticks_cex = 1.0
+            title_cex = 1.5
+        }
+
+        par(mar = c(20, 4, 5, 4))
+        plot(boruta.df, xlab = "", xaxt = "n", ylab = "", yaxt = "n")
+        grid(NULL, NULL, lty = 7, col = "gray") 
+
+
+        axis(side = 1, labels = FALSE, at = 1:ncol(boruta.df$ImpHistory))
+        axis(side = 2, las = 2, mgp = c(3, 0.75, 0), cex.axis = ticks_cex)
+
+        text(x = 1:ncol(boruta.df$ImpHistory),
+             y = par("usr")[3] - 5,
+             labels = names(Labels),
+             xpd = NA,
+             srt = 45,
+             adj = 1.0,
+             cex = ticks_cex)
+        mtext("Variable Importance", side = 3, line = 1, cex = title_cex)
+
+        if(tosave) dev.off()
+    }
 
 { # TODO: use only not rejected features
     rejected = boruta.df$finalDecision == "Rejected"

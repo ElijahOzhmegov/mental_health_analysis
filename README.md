@@ -4,6 +4,7 @@ source: https://osmihelp.org/research
 final report: [R report](https://htmlpreview.github.io/?https://raw.githubusercontent.com/ElijahOzhmegov/mental_health_analysis/master/main.html)
 
 ## Business Value section
+report: [html report](https://htmlpreview.github.io/?https://raw.githubusercontent.com/ElijahOzhmegov/mental_health_analysis/master/README.html)
 
 Here will be presented Technical Design and Implementation. 
 

@@ -241,10 +241,28 @@ df %>% str(max.level=2)
 
 df %<>% mutate(treatment = as.character(treatment))
 
+{ # split on training and testing
+    bound <- floor((nrow(df)/5)*4)         #define % of training and test set
+
+    df <- df[sample(nrow(df)), ]           #sample rows 
+    df.train <- df[1:bound, ]              #get training set
+    df.test <- df[(bound+1):nrow(df), ]    #get test set
+
+    df.train %>% 
+        group_by(treatment) %>% 
+        summarise(n = n(),
+                  n.prop = n/nrow(df.train))
+    df.test %>%
+        group_by(treatment) %>% 
+        summarise(n = n(),
+                  n.prop = n/nrow(df.test))
+
+}
+
 set.seed(0)
-df_split <- initial_split(df, prop=4/5)
+df_split <- initial_split(df.train, prop=4/5)
 df_train <- training(df_split)
-df_test  <- testing (df_split)
+df_valid <- testing (df_split)
 
 df_cv <- vfold_cv(df_train, strata=treatment, v=5)
 
@@ -252,92 +270,145 @@ df_cv <- vfold_cv(df_train, strata=treatment, v=5)
 # Random Forest
 #
 
-{ # random forest model
-    rf_recipe <- df %>% 
-        recipe(treatment ~ .)
+{
+    { # random forest model
+        rf_recipe <- df.train %>% 
+            recipe(treatment ~ .)
 
-    rf_model <- rand_forest() %>% 
-        set_args(mtry = tune()) %>% 
-        set_engine("ranger", importance = "impurity") %>% 
-        set_mode("classification")
+        m = df.train %>% ncol() %>% sqrt() %>% floor()
+        rf_model <- rand_forest() %>% 
+            set_args(mtry = m, trees = tune(), min_n = tune()) %>% 
+            set_engine("ranger", importance = "impurity") %>% 
+            set_mode("classification")
 
-    rf_workflow <- workflow() %>% 
-        add_recipe(rf_recipe) %>% 
-        add_model(rf_model)
+        rf_workflow <- workflow() %>% 
+            add_recipe(rf_recipe) %>% 
+            add_model(rf_model)
 
-    rf_grid  <- expand.grid(mtry=2:10)
+        # the number of trees will be tuned from 125 to 500.
+        # the minimum number of data points in a node 
+        # will be tuned from 2 to 8.
+        rf_grid <- grid_regular(trees(range = c(125, 500)),
+                                min_n(range = c(2, 8)),
+                                levels = 6)
 
-    rf_tune_results <- rf_workflow %>% 
-        tune_grid(resamples = df_cv,
-                  grid      = rf_grid,
-                  control   = control_grid(save_pred = TRUE, verbose = TRUE),
-                  metrics   = metric_set(accuracy, recall, roc_auc))
+        doParallel::registerDoParallel()
+        rf_tune_results <- rf_workflow %>% 
+            tune_grid(resamples = df_cv,
+                      grid      = rf_grid,
+                      control   = control_grid(save_pred = TRUE, verbose = TRUE),
+                      metrics   = metric_set(bal_accuracy, recall, roc_auc))
 
-}
-
-
-{ # plot the penalty plot
-    rf_plot  <- 
-        rf_tune_results %>% 
-        collect_metrics() %>% 
-#         filter(.metric == "accuracy") %>% 
-        ggplot(aes(x = mtry, y = mean)) +
-        geom_point() +
-        geom_line() +
-        facet_wrap(~.metric) +
-#         ylab("AUC the ROC Curve") +
-        theme_bw()
-
-    rf_plot
-
-}
+    }
 
 
-{ # choosing the best parameter and building the final model
-    param_final  <- rf_tune_results %>% 
-        select_best(metric = "roc_auc")
+    { # plot the penalty plot
+        tosave = TRUE
+        plot_title = paste("Random Forest penalty plot", 
+                           collapse=" ")
+        rf_plot_trees  <- 
+            rf_tune_results %>% 
+            collect_metrics() %>% 
+            ggplot(aes(x = trees, y = mean)) +
+            geom_point() +
+            geom_line() +
+            facet_wrap(~.metric) +
+            theme_bw() +
+            ggtitle(plot_title) +
+            theme(plot.title = element_text(size = 20, hjust = 0.5))
 
-    rf_fit  <- rf_workflow %>% 
-        finalize_workflow(param_final) %>% 
-        last_fit(df_split)
+        rf_plot_min_n  <- 
+            rf_tune_results %>% 
+            collect_metrics() %>% 
+            ggplot(aes(x = min_n, y = mean)) +
+            geom_point() +
+            geom_line() +
+            facet_wrap(~.metric) +
+            theme_bw()
 
-}
+        rf_penalty_plot = gridExtra::grid.arrange(rf_plot_trees, rf_plot_min_n, nrow = 2) 
+        rf_penalty_plot # just to show the plot
+        plot_path = glue::glue("pics/", "random_forest_penalty_plot.svg")
+        if(tosave) ggsave(plot_path, plot=rf_penalty_plot)
 
-{ # calculate AUC
-    roc_obj = rf_fit %>% 
-        collect_predictions() %>% 
-        pROC::roc(treatment, .pred_Yes)
-    auc_metric = pROC::auc(roc_obj)[[1]]
-
-
-}
-
-{ # draw ROC
-    rf_auc <- rf_fit %>% 
-        collect_predictions() %>% 
-        roc_curve(treatment, .pred_No) %>% 
-        mutate(model = "Random Forest")
-    rf_roc_plot <- autoplot(rf_auc) + 
-        ggtitle(paste0(c("RF model: AUC", round(auc_metric, 3)), collapse=" "))
-
-    rf_roc_plot
-}
-
-{ # validation
-    test_performance <- rf_fit %>% 
-        collect_metrics(); test_performance
-
-    test_predictions <- rf_fit %>% 
-        collect_predictions(); test_predictions
-
-    test_predictions %>% conf_mat(truth = treatment, estimate = .pred_class)
-
-    test_predictions %>% 
-        ggplot() +
-        geom_density(aes(x = .pred_Yes, fill = treatment), alpha=0.5) +
-        theme_bw()
+    }
 
 
+    { # choosing the best parameter and building the final model
+        param_final  <- rf_tune_results %>% 
+            select_best(metric = "roc_auc")
+
+        rf_fit  <- rf_workflow %>% 
+            finalize_workflow(param_final) %>% 
+            last_fit(df_split)
+
+    }
+
+    { # ROC and AUC
+    { # calculate AUC
+        roc_obj = rf_fit %>% 
+            collect_predictions() %>% 
+            pROC::roc(treatment, .pred_Yes)
+        auc_metric = pROC::auc(roc_obj)[[1]]
+
+    }
+
+    { # draw ROC
+        rf_auc <- rf_fit %>% collect_predictions() %>% 
+            roc_curve(treatment, .pred_No) %>% 
+            mutate(model = "Random Forest")
+
+        plot_title = paste("Random Forest: AUC", 
+                           round(auc_metric, 3),
+                           collapse=" ")
+
+        rf_roc_plot <- autoplot(rf_auc) + 
+            ggtitle(plot_title) + 
+            theme(plot.title = element_text(size = 20, hjust = 0.5))
+
+        rf_roc_plot
+        plot_path = glue::glue("pics/", 
+                               "random_forest_roc_plot.svg")
+        if(tosave) ggsave(plot_path, plot=rf_roc_plot)
+    }
+
+    }
+
+    { # Draw Distribution 
+        validation_predictions <- rf_fit %>% collect_predictions()
+
+        plot_title = paste("Random Forest, Validation Distribution", 
+                           collapse=" ")
+
+        rf_val_dist = validation_predictions %>% 
+            ggplot() +
+            geom_density(aes(x = .pred_Yes, fill = treatment), alpha=0.5) +
+            theme_bw() +
+            ggtitle(plot_title) + 
+            theme(plot.title = element_text(size = 20, hjust = 0.5))
+        rf_val_dist
+
+        plot_path = glue::glue("pics/", 
+                               "random_forest_validation_distribution.svg")
+        if(tosave) ggsave(plot_path, plot=rf_val_dist)
+
+
+    }
+
+    { # Validation Metrics
+        rf_conf_mat      = validation_predictions %>% conf_mat    (truth = treatment, estimate = .pred_class)
+
+        rf_recall        = validation_predictions %>% recall      (truth = treatment, estimate = .pred_class, event_level="second")
+        rf_accuracy      = validation_predictions %>% accuracy    (truth = treatment, estimate = .pred_class)
+        rf_fbal_accuracy = validation_predictions %>% bal_accuracy(truth = treatment, estimate = .pred_class)
+        rf_kap           = validation_predictions %>% kap         (truth = treatment, estimate = .pred_class)
+
+        rf_metrics = bind_rows(rf_recall       ,
+                               rf_accuracy     ,
+                               rf_fbal_accuracy,
+                               rf_kap          
+        )
+    }
 
 }
 

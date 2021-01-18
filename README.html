@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset='UTF-8'><meta name='viewport' content='width=device-width initial-scale=1'>
-<title>README</title><link href='https://fonts.loli.net/css?family=Open+Sans:400italic,700italic,700,400&subset=latin,latin-ext' rel='stylesheet' type='text/css' /><style type='text/css'>html {overflow-x: initial !important;}:root { --node-fill:  #ECECFF; --node-border:  #CCCCFF; --cluster-fill:  #ffffde; --cluster-border:  #aaaa33; --note-fill:  #fff5ad; --note-border:  #aaaa33; --mermaid-color:  var(--text-color); }
+<title>README</title><style type='text/css'>html {overflow-x: initial !important;}:root { --node-fill:  #ECECFF; --node-border:  #CCCCFF; --cluster-fill:  #ffffde; --cluster-border:  #aaaa33; --note-fill:  #fff5ad; --note-border:  #aaaa33; --mermaid-color:  var(--text-color); }
 
 
 :root { --bg-color: #ffffff; --text-color: #333333; --select-text-bg-color: #B5D6FC; --select-text-font-color: auto; --monospace: "Lucida Console",Consolas,"Courier",monospace; --title-bar-height: 20px; }
@@ -241,32 +241,212 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket { color: rgb(255, 34, 34); }
 
 
 :root {
-    --side-bar-bg-color: #fafafa;
-    --control-text-color: #777;
+  --mermaid-theme: night;
+  --node-fill: #BDD5EA;
 }
 
-@include-when-export url(https://fonts.loli.net/css?family=Open+Sans:400italic,700italic,700,400&subset=latin,latin-ext);
+[lang='mermaid'] .label {
+  color: #333;
+}
 
-/* open-sans-regular - latin-ext_latin */
-  /* open-sans-italic - latin-ext_latin */
-    /* open-sans-700 - latin-ext_latin */
-    /* open-sans-700italic - latin-ext_latin */
-  html {
+/* CSS Document */
+
+/** code highlight */
+
+.cm-s-inner .cm-variable,
+.cm-s-inner .cm-operator,
+.cm-s-inner .cm-property {
+    color: #b8bfc6;
+}
+
+.cm-s-inner .cm-keyword {
+    color: #C88FD0;
+}
+
+.cm-s-inner .cm-tag {
+    color: #7DF46A;
+}
+
+.cm-s-inner .cm-attribute {
+    color: #7575E4;
+}
+
+.CodeMirror div.CodeMirror-cursor {
+    border-left: 1px solid #b8bfc6;
+    z-index: 3;
+}
+
+.cm-s-inner .cm-string {
+    color: #D26B6B;
+}
+
+.cm-s-inner .cm-comment,
+.cm-s-inner.cm-comment {
+    color: #DA924A;
+}
+
+.cm-s-inner .cm-header,
+.cm-s-inner .cm-def,
+.cm-s-inner.cm-header,
+.cm-s-inner.cm-def {
+    color: #8d8df0;
+}
+
+.cm-s-inner .cm-quote,
+.cm-s-inner.cm-quote {
+    color: #57ac57;
+}
+
+.cm-s-inner .cm-hr {
+    color: #d8d5d5;
+}
+
+.cm-s-inner .cm-link {
+    color: #d3d3ef;
+}
+
+.cm-s-inner .cm-negative {
+    color: #d95050;
+}
+
+.cm-s-inner .cm-positive {
+    color: #50e650;
+}
+
+.cm-s-inner .cm-string-2 {
+    color: #f50;
+}
+
+.cm-s-inner .cm-meta,
+.cm-s-inner .cm-qualifier {
+    color: #b7b3b3;
+}
+
+.cm-s-inner .cm-builtin {
+    color: #f3b3f8;
+}
+
+.cm-s-inner .cm-bracket {
+    color: #997;
+}
+
+.cm-s-inner .cm-atom,
+.cm-s-inner.cm-atom {
+    color: #84B6CB;
+}
+
+.cm-s-inner .cm-number {
+    color: #64AB8F;
+}
+
+.cm-s-inner .cm-variable {
+    color: #b8bfc6;
+}
+
+.cm-s-inner .cm-variable-2 {
+    color: #9FBAD5;
+}
+
+.cm-s-inner .cm-variable-3 {
+    color: #1cc685;
+}
+
+.CodeMirror-selectedtext,
+.CodeMirror-selected {
+    background: #4a89dc;
+    color: #fff !important;
+    text-shadow: none;
+}
+
+.CodeMirror-gutters {
+    border-right: none;
+}
+
+/* CSS Document */
+
+/** markdown source **/
+.cm-s-typora-default .cm-header, 
+.cm-s-typora-default .cm-property
+{
+    color: #cebcca;
+}
+
+.CodeMirror.cm-s-typora-default div.CodeMirror-cursor{
+    border-left: 3px solid #b8bfc6;
+}
+
+.cm-s-typora-default .cm-comment {
+    color: #9FB1FF;
+}
+
+.cm-s-typora-default .cm-string {
+    color: #A7A7D9
+}
+
+.cm-s-typora-default .cm-atom, .cm-s-typora-default .cm-number {
+    color: #848695;
+    font-style: italic;
+}
+
+.cm-s-typora-default .cm-link {
+    color: #95B94B;
+}
+
+.cm-s-typora-default .CodeMirror-activeline-background {
+    background: rgba(51, 51, 51, 0.72);
+}
+
+.cm-s-typora-default .cm-comment, .cm-s-typora-default .cm-code {
+	color: #8aa1e1;
+}@import "";
+@import "";
+@import "";
+
+:root {
+    --bg-color:  #363B40;
+    --side-bar-bg-color: #2E3033;
+    --text-color: #b8bfc6;
+
+    --select-text-bg-color:#4a89dc;
+
+    --item-hover-bg-color: #0a0d16;
+    --control-text-color: #b7b7b7;
+    --control-text-hover-color: #eee;
+    --window-border: 1px solid #555;
+
+    --active-file-bg-color: rgb(34, 34, 34);
+    --active-file-border-color: #8d8df0;
+
+    --primary-color: #a3d5fe;
+
+    --active-file-text-color: white;
+    --item-hover-bg-color: #70717d;
+    --item-hover-text-color: white;
+    --primary-color: #6dc1e7;
+
+    --rawblock-edit-panel-bd: #333;
+
+    --search-select-bg-color: #428bca;
+}
+
+html {
     font-size: 16px;
 }
 
+html,
 body {
-    font-family: "Open Sans","Clear Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    color: rgb(51, 51, 51);
-    line-height: 1.6;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    background: #363B40;
+    background: var(--bg-color);
+    fill: currentColor;
+    line-height: 1.625rem;
 }
 
 #write {
-    max-width: 860px;
-  	margin: 0 auto;
-  	padding: 30px;
-    padding-bottom: 100px;
+    max-width: 914px;
 }
+
 
 @media only screen and (min-width: 1400px) {
 	#write {
@@ -280,344 +460,953 @@ body {
 	}
 }
 
-#write > ul:first-child,
-#write > ol:first-child{
-    margin-top: 30px;
+html,
+body,
+button,
+input,
+select,
+textarea,
+div.code-tooltip-content {
+    color: #b8bfc6;
+    border-color: transparent;
 }
 
-a {
-    color: #4183C4;
+div.code-tooltip,
+.md-hover-tip .md-arrow:after {
+    background: #333;
 }
+
+.popover.bottom > .arrow:after {
+    border-bottom-color: #333;
+}
+
+html,
+body,
+button,
+input,
+select,
+textarea {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+hr {
+    height: 2px;
+    border: 0;
+    margin: 24px 0 !important;
+}
+
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-    position: relative;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    font-weight: bold;
-    line-height: 1.4;
-    cursor: text;
+    font-family: "Lucida Grande", "Corbel", sans-serif;
+    font-weight: normal;
+    clear: both;
+    -ms-word-wrap: break-word;
+    word-wrap: break-word;
+    margin: 0;
+    padding: 0;
+    color: #DEDEDE
 }
-h1:hover a.anchor,
-h2:hover a.anchor,
-h3:hover a.anchor,
-h4:hover a.anchor,
-h5:hover a.anchor,
-h6:hover a.anchor {
-    text-decoration: none;
-}
-h1 tt,
-h1 code {
-    font-size: inherit;
-}
-h2 tt,
-h2 code {
-    font-size: inherit;
-}
-h3 tt,
-h3 code {
-    font-size: inherit;
-}
-h4 tt,
-h4 code {
-    font-size: inherit;
-}
-h5 tt,
-h5 code {
-    font-size: inherit;
-}
-h6 tt,
-h6 code {
-    font-size: inherit;
-}
+
 h1 {
-    font-size: 2.25em;
-    line-height: 1.2;
-    border-bottom: 1px solid #eee;
+    font-size: 2.5rem;
+    /* 36px */
+    line-height: 2.75rem;
+    /* 40px */
+    margin-bottom: 1.5rem;
+    /* 24px */
+    letter-spacing: -1.5px;
 }
+
 h2 {
-    font-size: 1.75em;
-    line-height: 1.225;
-    border-bottom: 1px solid #eee;
+    font-size: 1.63rem;
+    /* 24px */
+    line-height: 1.875rem;
+    /* 30px */
+    margin-bottom: 1.5rem;
+    /* 24px */
+    letter-spacing: -1px;
+    font-weight: bold;
 }
-
-/*@media print {
-    .typora-export h1,
-    .typora-export h2 {
-        border-bottom: none;
-        padding-bottom: initial;
-    }
-
-    .typora-export h1::after,
-    .typora-export h2::after {
-        content: "";
-        display: block;
-        height: 100px;
-        margin-top: -96px;
-        border-top: 1px solid #eee;
-    }
-}*/
 
 h3 {
-    font-size: 1.5em;
-    line-height: 1.43;
-}
-h4 {
-    font-size: 1.25em;
-}
-h5 {
-    font-size: 1em;
-}
-h6 {
-   font-size: 1em;
-    color: #777;
-}
-p,
-blockquote,
-ul,
-ol,
-dl,
-table{
-    margin: 0.8em 0;
-}
-li>ol,
-li>ul {
-    margin: 0 0;
-}
-hr {
-    height: 2px;
-    padding: 0;
-    margin: 16px 0;
-    background-color: #e7e7e7;
-    border: 0 none;
-    overflow: hidden;
-    box-sizing: content-box;
+    font-size: 1.17rem;
+    /* 18px */
+    line-height: 1.5rem;
+    /* 24px */
+    margin-bottom: 1.5rem;
+    /* 24px */
+    letter-spacing: -1px;
+    font-weight: bold;
 }
 
-li p.first {
-    display: inline-block;
+h4 {
+    font-size: 1.12rem;
+    /* 16px */
+    line-height: 1.375rem;
+    /* 22px */
+    margin-bottom: 1.5rem;
+    /* 24px */
+    color: white;
 }
+
+h5 {
+    font-size: 0.97rem;
+    /* 16px */
+    line-height: 1.25rem;
+    /* 22px */
+    margin-bottom: 1.5rem;
+    /* 24px */
+    font-weight: bold;
+}
+
+h6 {
+    font-size: 0.93rem;
+    /* 16px */
+    line-height: 1rem;
+    /* 16px */
+    margin-bottom: 0.75rem;
+    color: white;
+}
+
+@media (min-width: 980px) {
+    h3.md-focus:before,
+    h4.md-focus:before,
+    h5.md-focus:before,
+    h6.md-focus:before {
+        color: #ddd;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        position: absolute;
+        left: -1.642857143rem;
+        top: .357142857rem;
+        float: left;
+        font-size: 9px;
+        padding-left: 2px;
+        padding-right: 2px;
+        vertical-align: bottom;
+        font-weight: normal;
+        line-height: normal;
+    }
+
+    h3.md-focus:before {
+        content: 'h3';
+    }
+
+    h4.md-focus:before {
+        content: 'h4';
+    }
+
+    h5.md-focus:before {
+        content: 'h5';
+        top: 0px;
+    }
+
+    h6.md-focus:before {
+        content: 'h6';
+        top: 0px;
+    }
+}
+
+a {
+    text-decoration: none;
+    outline: 0;
+}
+
+a:hover {
+    outline: 0;
+}
+
+a:focus {
+    outline: thin dotted;
+}
+
+sup.md-footnote {
+    background-color: #555;
+    color: #ddd;
+}
+
+p {
+    -ms-word-wrap: break-word;
+    word-wrap: break-word;
+}
+
+p,
+ul,
+dd,
+ol,
+hr,
+address,
+pre,
+table,
+iframe,
+.wp-caption,
+.wp-audio-shortcode,
+.wp-video-shortcode {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    /* 24px */
+}
+
+audio:not([controls]) {
+    display: none;
+}
+
+[hidden] {
+    display: none;
+}
+
+::-moz-selection {
+    background: #4a89dc;
+    color: #fff;
+    text-shadow: none;
+}
+
+*.in-text-selection,
+::selection {
+    background: #4a89dc;
+    color: #fff;
+    text-shadow: none;
+}
+
 ul,
 ol {
-    padding-left: 30px;
+    padding: 0 0 0 1.875rem;
+    /* 30px */
 }
-ul:first-child,
-ol:first-child {
-    margin-top: 0;
+
+ul {
+    list-style: square;
 }
-ul:last-child,
-ol:last-child {
-    margin-bottom: 0;
+
+ol {
+    list-style: decimal;
 }
-blockquote {
-    border-left: 4px solid #dfe2e5;
-    padding: 0 15px;
-    color: #777777;
-}
-blockquote blockquote {
-    padding-right: 0;
-}
-table {
-    padding: 0;
-    word-break: initial;
-}
-table tr {
-    border-top: 1px solid #dfe2e5;
+
+ul ul,
+ol ol,
+ul ol,
+ol ul {
     margin: 0;
-    padding: 0;
 }
-table tr:nth-child(2n),
-thead {
-    background-color: #f8f8f8;
-}
-table th {
+
+b,
+th,
+dt,
+strong {
     font-weight: bold;
-    border: 1px solid #dfe2e5;
-    border-bottom: 0;
-    margin: 0;
-    padding: 6px 13px;
-}
-table td {
-    border: 1px solid #dfe2e5;
-    margin: 0;
-    padding: 6px 13px;
-}
-table th:first-child,
-table td:first-child {
-    margin-top: 0;
-}
-table th:last-child,
-table td:last-child {
-    margin-bottom: 0;
 }
 
-.CodeMirror-lines {
-    padding-left: 4px;
+i,
+em,
+dfn,
+cite {
+    font-style: italic;
 }
 
-.code-tooltip {
-    box-shadow: 0 1px 1px 0 rgba(0,28,36,.3);
-    border-top: 1px solid #eef2f2;
+blockquote {
+    padding-left: 1.875rem;
+    margin: 0 0 1.875rem 1.875rem;
+    border-left: solid 2px #474d54;
+    padding-left: 30px;
+    margin-top: 35px;
 }
 
-.md-fences,
+pre,
 code,
-tt {
-    border: 1px solid #e7eaed;
-    background-color: #f8f8f8;
+kbd,
+tt,
+var {
+    font-size: 0.875rem;
+    font-family: Monaco, Consolas, "Andale Mono", "DejaVu Sans Mono", monospace;
+}
+
+code,
+tt,
+var {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+kbd {
+    padding: 2px 4px;
+    font-size: 90%;
+    color: #fff;
+    background-color: #333;
     border-radius: 3px;
-    padding: 0;
-    padding: 2px 4px 0px 4px;
-    font-size: 0.9em;
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,.25);
 }
 
-code {
-    background-color: #f3f4f4;
-    padding: 0 2px 0 2px;
+pre.md-fences {
+    padding: 10px 10px 10px 30px;
+    margin-bottom: 20px;
+    background: #333;
 }
 
-.md-fences {
-    margin-bottom: 15px;
-    margin-top: 15px;
-    padding-top: 8px;
-    padding-bottom: 6px;
+.CodeMirror-gutters {
+    background: #333;
+    border-right: 1px solid transparent;
 }
 
+.enable-diagrams pre.md-fences[lang="sequence"] .code-tooltip,
+.enable-diagrams pre.md-fences[lang="flow"] .code-tooltip,
+.enable-diagrams pre.md-fences[lang="mermaid"] .code-tooltip {
+    bottom: -2.2em;
+    right: 4px;
+}
+
+code,
+kbd,
+tt,
+var {
+    padding: 2px 5px;
+}
+
+table {
+    max-width: 100%;
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+th,
+td {
+    padding: 5px 10px;
+    vertical-align: top;
+}
+
+a {
+    -webkit-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+
+hr {
+    background: #474d54;
+    /* variable */
+}
+
+h1 {
+    margin-top: 2em;
+}
+
+a {
+    color: #e0e0e0;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #fff;
+}
+
+.md-inline-math script {
+    color: #81b1db;
+}
+
+b,
+th,
+dt,
+strong {
+    color: #DEDEDE;
+    /* variable */
+}
+
+mark {
+    background: #D3D40E;
+}
+
+blockquote {
+    color: #9DA2A6;
+}
+
+table a {
+    color: #DEDEDE;
+    /* variable */
+}
+
+th,
+td {
+    border: solid 1px #474d54;
+    /* variable */
+}
+
+.task-list {
+    padding-left: 0;
+}
+
+.md-task-list-item {
+    padding-left: 1.25rem;
+}
 
 .md-task-list-item > input {
-  margin-left: -1.3em;
+    top: auto;
 }
 
-@media print {
-    html {
-        font-size: 13px;
-    }
-    table,
-    pre {
-        page-break-inside: avoid;
-    }
-    pre {
-        word-wrap: break-word;
-    }
+.md-task-list-item > input:before {
+    content: "";
+    display: inline-block;
+    width: 0.875rem;
+    height: 0.875rem;
+    vertical-align: middle;
+    text-align: center;
+    border: 1px solid #b8bfc6;
+    background-color: #363B40;
+    margin-top: -0.4rem;
 }
 
-.md-fences {
-	background-color: #f8f8f8;
-}
-#write pre.md-meta-block {
-	padding: 1rem;
-    font-size: 85%;
-    line-height: 1.45;
-    background-color: #f7f7f7;
-    border: 0;
-    border-radius: 3px;
-    color: #777777;
-    margin-top: 0 !important;
+.md-task-list-item > input:checked:before,
+.md-task-list-item > input[checked]:before {
+    content: '\221A';
+    /*◘*/
+    font-size: 0.625rem;
+    line-height: 0.625rem;
+    color: #DEDEDE;
 }
 
-.mathjax-block>.code-tooltip {
-	bottom: .375rem;
-}
-
-.md-mathjax-midline {
-    background: #fafafa;
-}
-
-#write>h3.md-focus:before{
-	left: -1.5625rem;
-	top: .375rem;
-}
-#write>h4.md-focus:before{
-	left: -1.5625rem;
-	top: .285714286rem;
-}
-#write>h5.md-focus:before{
-	left: -1.5625rem;
-	top: .285714286rem;
-}
-#write>h6.md-focus:before{
-	left: -1.5625rem;
-	top: .285714286rem;
-}
-.md-image>.md-meta {
-    /*border: 1px solid #ddd;*/
-    border-radius: 3px;
-    padding: 2px 0px 0px 4px;
-    font-size: 0.9em;
-    color: inherit;
-}
-
-.md-tag {
-    color: #a7a7a7;
-    opacity: 1;
-}
-
-.md-toc { 
-    margin-top:20px;
-    padding-bottom:20px;
-}
-
-.sidebar-tabs {
-    border-bottom: none;
+/** quick open **/
+.auto-suggest-container {
+    border: 0px;
+    background-color: #525C65;
 }
 
 #typora-quick-open {
-    border: 1px solid #ddd;
-    background-color: #f8f8f8;
+    background-color: #525C65;
 }
 
-#typora-quick-open-item {
-    background-color: #FAFAFA;
-    border-color: #FEFEFE #e5e5e5 #e5e5e5 #eee;
-    border-style: solid;
-    border-width: 1px;
+#typora-quick-open input{
+    background-color: #525C65;
+    border: 0;
+    border-bottom: 1px solid grey;
 }
 
-/** focus mode */
-.on-focus-mode blockquote {
-    border-left-color: rgba(85, 85, 85, 0.12);
+.typora-quick-open-item {
+    background-color: inherit;
+    color: inherit;
 }
 
-header, .context-menu, .megamenu-content, footer{
-    font-family: "Segoe UI", "Arial", sans-serif;
+.typora-quick-open-item.active,
+.typora-quick-open-item:hover {
+    background-color: #4D8BDB;
+    color: white;
 }
 
-.file-node-content:hover .file-node-icon,
-.file-node-content:hover .file-node-open-state{
-    visibility: visible;
+.typora-quick-open-item:hover {
+    background-color: rgba(77, 139, 219, 0.8);
 }
 
-.mac-seamless-mode #typora-sidebar {
-    background-color: #fafafa;
-    background-color: var(--side-bar-bg-color);
+.typora-search-spinner > div {
+  background-color: #fff;
 }
 
-.md-lang {
-    color: #b4654d;
+#write pre.md-meta-block {
+    border-bottom: 1px dashed #ccc;
+    background: transparent;
+    padding-bottom: 0.6em;
+    line-height: 1.6em;
 }
 
-.html-for-mac .context-menu {
-    --item-hover-bg-color: #E6F0FE;
+.btn,
+.btn .btn-default {
+    background: transparent;
+    color: #b8bfc6;
 }
 
-#md-notification .btn {
+.ty-table-edit {
+    border-top: 1px solid gray;
+    background-color: #363B40;
+}
+
+.popover-title {
+    background: transparent;
+}
+
+.md-image>.md-meta {
+    color: #BBBBBB;
+    background: transparent;
+}
+
+.md-expand.md-image>.md-meta {
+    color: #DDD;
+}
+
+#write>h3:before,
+#write>h4:before,
+#write>h5:before,
+#write>h6:before {
+    border: none;
+    border-radius: 0px;
+    color: #888;
+    text-decoration: underline;
+    left: -1.4rem;
+    top: 0.2rem;
+}
+
+#write>h3.md-focus:before {
+    top: 2px;
+}
+
+#write>h4.md-focus:before {
+    top: 2px;
+}
+
+.md-toc-item {
+    color: #A8C2DC;
+}
+
+#write div.md-toc-tooltip {
+    background-color: #363B40;
+}
+
+.dropdown-menu .btn:hover,
+.dropdown-menu .btn:focus,
+.md-toc .btn:hover,
+.md-toc .btn:focus {
+    color: white;
+    background: black;
+}
+
+#toc-dropmenu {
+    background: rgba(50, 54, 59, 0.93);
+    border: 1px solid rgba(253, 253, 253, 0.15);
+}
+
+#toc-dropmenu .divider {
+    background-color: #9b9b9b;
+}
+
+.outline-expander:before {
+    top: 2px;
+}
+
+#typora-sidebar {
+    box-shadow: none;
+    border-right: 1px dashed;
+    border-right: none;
+}
+
+.sidebar-tabs {
+    border-bottom:0;
+}
+
+#typora-sidebar:hover .outline-title-wrapper {
+    border-left: 1px dashed;
+}
+
+.outline-title-wrapper .btn {
+    color: inherit;
+}
+
+.outline-item:hover {
+    border-color: #363B40;
+    background-color: #363B40;
+    color: white;
+}
+
+h1.md-focus .md-attr,
+h2.md-focus .md-attr,
+h3.md-focus .md-attr,
+h4.md-focus .md-attr,
+h5.md-focus .md-attr,
+h6.md-focus .md-attr,
+.md-header-span .md-attr {
+    color: #8C8E92;
+    display: inline;
+}
+
+.md-comment {
+    color: #5a95e3;
+    opacity: 1;
+}
+
+.md-inline-math svg {
+    color: #b8bfc6;
+}
+
+#math-inline-preview .md-arrow:after {
+    background: black;
+}
+
+.modal-content {
+    background: var(--bg-color);
     border: 0;
 }
 
-.dropdown-menu .divider {
-    border-color: #e5e5e5;
+.modal-title {
+    font-size: 1.5em;
 }
 
-.ty-preferences .window-content {
-    background-color: #fafafa;
+.modal-content input {
+    background-color: rgba(26, 21, 21, 0.51);
+    color: white;
+}
+
+.modal-content .input-group-addon {
+    color: white;
+}
+
+.modal-backdrop {
+    background-color: rgba(174, 174, 174, 0.7);
+}
+
+.modal-content .btn-primary {
+    border-color: var(--primary-color);
+}
+
+.md-table-resize-popover {
+    background-color: #333;
+}
+
+.form-inline .input-group .input-group-addon {
+    color: white;
+}
+
+#md-searchpanel {
+    border-bottom: 1px dashed grey;
+}
+
+/** UI for electron */
+
+.context-menu,
+#spell-check-panel,
+#footer-word-count-info {
+    background-color: #42464A;
+}
+
+.context-menu.dropdown-menu .divider,
+.dropdown-menu .divider {
+    background-color: #777777;
+}
+
+footer {
+    color: inherit;
+}
+
+@media (max-width: 1000px) {
+    footer {
+        border-top: none;
+    }
+    footer:hover {
+        color: inherit;
+    }
+}
+
+#file-info-file-path .file-info-field-value:hover {
+    background-color: #555;
+    color: #dedede;
+}
+
+.megamenu-content,
+.megamenu-opened header {
+    background: var(--bg-color);
+}
+
+.megamenu-menu-panel h2,
+.megamenu-menu-panel h1,
+.long-btn {
+    color: inherit;
+}
+
+.megamenu-menu-panel input[type='text'] {
+    background: inherit;
+    border: 0;
+    border-bottom: 1px solid;
+}
+
+#recent-file-panel-action-btn {
+    background: inherit;
+    border: 1px grey solid;
+}
+
+.megamenu-menu-panel .dropdown-menu > li > a {
+    color: inherit;
+    background-color: #2F353A;
+    text-decoration: none;
+}
+
+.megamenu-menu-panel table td:nth-child(1) {
+    color: inherit;
+    font-weight: bold;
+}
+
+.megamenu-menu-panel tbody tr:hover td:nth-child(1) {
+    color: white;
+}
+
+.modal-footer .btn-default, 
+.modal-footer .btn-primary,
+.modal-footer .btn-default:not(:hover) {
+    border: 1px solid;
+    border-color: transparent;
+}
+
+.btn-primary {
+    color: white;
+}
+
+.btn-default:hover, .btn-default:focus, .btn-default.focus, .btn-default:active, .btn-default.active, .open > .dropdown-toggle.btn-default {
+    color: white;
+    border: 1px solid #ddd;
+    background-color: inherit;
+}
+
+.modal-header {
+    border-bottom: 0;
+}
+
+.modal-footer {
+    border-top: 0;
+}
+
+#recent-file-panel tbody tr:nth-child(2n-1) {
+    background-color: transparent !important;
+}
+
+.megamenu-menu-panel tbody tr:hover td:nth-child(2) {
+    color: inherit;
+}
+
+.megamenu-menu-panel .btn {
+    border: 1px solid #eee;
+    background: transparent;
+}
+
+.mouse-hover .toolbar-icon.btn:hover,
+#w-full.mouse-hover,
+#w-pin.mouse-hover {
+    background-color: inherit;
+}
+
+.typora-node::-webkit-scrollbar {
+    width: 5px;
+}
+
+.typora-node::-webkit-scrollbar-thumb:vertical {
+    background: rgba(250, 250, 250, 0.3);
+}
+
+.typora-node::-webkit-scrollbar-thumb:vertical:active {
+    background: rgba(250, 250, 250, 0.5);
+}
+
+#w-unpin {
+    background-color: #4182c4;
+}
+
+#top-titlebar, #top-titlebar * {
+    color: var(--item-hover-text-color);
+}
+
+.typora-sourceview-on #toggle-sourceview-btn,
+#footer-word-count:hover,
+.ty-show-word-count #footer-word-count {
+    background: #333333;
+}
+
+#toggle-sourceview-btn:hover {
+    color: #eee;
+    background: #333333;
+}
+
+/** focus mode */
+.on-focus-mode .md-end-block:not(.md-focus):not(.md-focus-container) * {
+    color: #686868 !important;
+}
+
+.on-focus-mode .md-end-block:not(.md-focus) img,
+.on-focus-mode .md-task-list-item:not(.md-focus-container)>input {
+    opacity: #686868 !important;
+}
+
+.on-focus-mode li[cid]:not(.md-focus-container){
+    color: #686868;
+}
+
+.on-focus-mode .md-fences.md-focus .CodeMirror-code>*:not(.CodeMirror-activeline) *,
+.on-focus-mode .CodeMirror.cm-s-inner:not(.CodeMirror-focused) * {
+    color: #686868 !important;
+}
+
+.on-focus-mode .md-focus,
+.on-focus-mode .md-focus-container {
+    color: #fff;
+}
+
+.on-focus-mode #typora-source .CodeMirror-code>*:not(.CodeMirror-activeline) * {
+    color: #686868 !important;
+}
+
+
+/*diagrams*/
+#write .md-focus .md-diagram-panel {
+    border: 1px solid #ddd;
+    margin-left: -1px;
+    width: calc(100% + 2px);
+}
+
+/*diagrams*/
+#write .md-focus.md-fences-with-lineno .md-diagram-panel {
+    margin-left: auto;
+}
+
+.md-diagram-panel-error {
+    color: #f1908e;
+}
+
+.active-tab-files #info-panel-tab-file,
+.active-tab-files #info-panel-tab-file:hover,
+.active-tab-outline #info-panel-tab-outline,
+.active-tab-outline #info-panel-tab-outline:hover {
+    color: #eee;
+}
+
+.sidebar-footer-item:hover,
+.footer-item:hover {
+    background: inherit;
+    color: white;
+}
+
+.ty-side-sort-btn.active,
+.ty-side-sort-btn:hover,
+.selected-folder-menu-item a:after {
+    color: white;
+}
+
+#sidebar-files-menu {
+    border:solid 1px;
+    box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.79);
+    background-color: var(--bg-color);
+}
+
+.file-list-item {
+    border-bottom:none;
+}
+
+.file-list-item-summary {
+    opacity: 1;
+}
+
+.file-list-item.active:first-child {
+    border-top: none;
+}
+
+.file-node-background {
+    height: 32px;
+}
+
+.file-library-node.active>.file-node-content,
+.file-list-item.active {
+    color: white;
+    color: var(--active-file-text-color);
+}
+
+.file-library-node.active>.file-node-background{
+    background-color: rgb(34, 34, 34);
+    background-color: var(--active-file-bg-color);
+}
+.file-list-item.active {
+    background-color: rgb(34, 34, 34);
+    background-color: var(--active-file-bg-color);
+}
+
+#ty-tooltip {
+    background-color: black;
+    color: #eee;
+}
+
+.md-task-list-item>input {
+    margin-left: -1.3em;
+    margin-top: 0.3rem;
+    -webkit-appearance: none;
+}
+
+.md-mathjax-midline {
+    background-color: #57616b;
+    border-bottom: none;
+}
+
+footer.ty-footer {
+    border-color: #656565;
+}
+
+.ty-preferences .btn-default {
+    background: transparent;
+}
+.ty-preferences .btn-default:hover {
+    background: #57616b;
+}
+
+.ty-preferences select {
+    border: 1px solid #989698;
+    height: 21px;
 }
 
 .ty-preferences .nav-group-item.active {
+    background: var(--item-hover-bg-color);
+}
+
+.ty-preferences input[type="search"] {
+    border-color: #333;
+    background: #333;
+    line-height: 22px;
+    border-radius: 6px;
     color: white;
-    background: #999;
+}
+
+.ty-preferences input[type="search"]:focus {
+    box-shadow: none;
+}
+
+[data-is-directory="true"] .file-node-content {
+    margin-bottom: 0;
+}
+
+.file-node-title {
+    line-height: 22px;
+}
+
+.html-for-mac .file-node-open-state, .html-for-mac .file-node-icon {
+    line-height: 26px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(230, 230, 230, 0.30);
+}
+
+::-webkit-scrollbar-thumb:active {
+    background: rgba(230, 230, 230, 0.50);
+}
+
+#typora-sidebar:hover div.sidebar-content-content::-webkit-scrollbar-thumb:horizontal {
+    background: rgba(230, 230, 230, 0.30);
+}
+
+.nav-group-item:active {
+    background-color: #474d54;
+}
+
+.md-search-hit {
+    background: rgba(199, 140, 60, 0.81);
+    color: #eee;
+}
+
+.md-search-hit * {
+    color: #eee;
+}
+
+#md-searchpanel input {
+    color: white;
+}
+
+.export-detail,
+.export-item.active,
+.export-items-list-control {
+    background: #d6d6d4
+}
+
+.modal-backdrop.in {
+    opacity: 1;
+    backdrop-filter: blur(1px);
 }
 
  :root {--mermaid-font-zoom:1em ;} 
@@ -625,6 +1414,6 @@ header, .context-menu, .megamenu-content, footer{
 </head>
 <body class='typora-export'>
 <div id='write'  class=''><h1><a name="mental-health-analysis-in-tech" class="md-header-anchor"></a><span>Mental Health Analysis in Tech</span></h1><p><span>source: </span><a href='https://osmihelp.org/research' target='_blank' class='url'>https://osmihelp.org/research</a>
-<span>final report: </span><a href='https://htmlpreview.github.io/?https://raw.githubusercontent.com/ElijahOzhmegov/mental_health_analysis/master/main.html'><span>R report</span></a></p><h2><a name="business-value-section" class="md-header-anchor"></a><span>Business Value section</span></h2><p><span>report: </span><a href='https://htmlpreview.github.io/?https://raw.githubusercontent.com/ElijahOzhmegov/mental_health_analysis/master/README.html'><span>html report</span></a></p><p><span>Here will be presented Technical Design and Implementation. </span></p><h3><a name="data-journey-the-1st-stage" class="md-header-anchor"></a><span>Data journey: the 1st stage</span></h3><div class="md-diagram-panel"><svg id="mermaidChart280" width="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="164" style="max-width: 574.25px; height: 204px;" viewBox="-8 -8 574.25 164" class="md-require-zoom-fix"><style>#mermaidChart280{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;fill:#333333;}#mermaidChart280 .error-icon{fill:hsl(60,100%,100%);}#mermaidChart280 .error-text{fill:rgb(0,0,0);stroke:rgb(0,0,0);}#mermaidChart280 .edge-thickness-normal{stroke-width:2px;}#mermaidChart280 .edge-thickness-thick{stroke-width:3.5px;}#mermaidChart280 .edge-pattern-solid{stroke-dasharray:0;}#mermaidChart280 .edge-pattern-dashed{stroke-dasharray:3;}#mermaidChart280 .edge-pattern-dotted{stroke-dasharray:2;}#mermaidChart280 .marker{fill:#000000;}#mermaidChart280 .marker.cross{stroke:#000000;}#mermaidChart280 svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;}#mermaidChart280 .label{font-family:"trebuchet ms",verdana,arial,sans-serif;color:#333;}#mermaidChart280 .label text{fill:#333;}#mermaidChart280 .node rect,#mermaidChart280 .node circle,#mermaidChart280 .node ellipse,#mermaidChart280 .node polygon,#mermaidChart280 .node path{fill:#ECECFF;stroke:hsl(240,60%,86.2745098039%);stroke-width:1px;}#mermaidChart280 .node .label{text-align:center;}#mermaidChart280 .node.clickable{cursor:pointer;}#mermaidChart280 .arrowheadPath{fill:undefined;}#mermaidChart280 .edgePath .path{stroke:#000000;stroke-width:1.5px;}#mermaidChart280 .flowchart-link{stroke:#000000;fill:none;}#mermaidChart280 .edgeLabel{background-color:#f4f4f4;text-align:center;}#mermaidChart280 .edgeLabel rect{opacity:0.5;background-color:#f4f4f4;fill:#f4f4f4;}#mermaidChart280 .cluster rect{fill:hsl(60,100%,100%);stroke:hsl(60,60%,90%);stroke-width:1px;}#mermaidChart280 .cluster text{fill:rgb(0,0,0);}#mermaidChart280 div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:12px;background:hsl(60,100%,100%);border:1px solid undefined;border-radius:2px;pointer-events:none;z-index:100;}#mermaidChart280:root{--mermaid-font-family:sans-serif;}#mermaidChart280:root{--mermaid-alt-font-family:sans-serif;}#mermaidChart280 flowchart{fill:apa;}</style><g><g class="output"><g class="clusters"></g><g class="edgePaths"><g class="edgePath LS-A1 LE-B" id="L-A1-B" style="opacity: 1;"><path class="path" d="M90.390625,30.5L115.390625,30.5L140.390625,30.5L165.390625,30.5L190.390625,30.5L215.390625,30.5L250.18503289473685,55.5" marker-end="url(#arrowhead12272)" style=" stroke-width: 3.5px;fill:none"></path><defs><marker id="arrowhead12272" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowheadPath" style="stroke-width: 1px; stroke-dasharray: 1px, 0px;"></path></marker></defs></g><g class="edgePath LS-A2 LE-B" id="L-A2-B" style="opacity: 1;"><path class="path" d="M87.71875,125.5L115.390625,125.5L140.390625,125.5L165.390625,125.5L190.390625,125.5L215.390625,125.5L250.18503289473685,100.5" marker-end="url(#arrowhead12273)" style=" stroke-width: 3.5px;fill:none"></path><defs><marker id="arrowhead12273" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowheadPath" style="stroke-width: 1px; stroke-dasharray: 1px, 0px;"></path></marker></defs></g><g class="edgePath LS-B LE-id1" id="L-B-id1" style="opacity: 1;"><path class="path" d="M322.609375,78L347.609375,78L372.609375,78L397.609375,78L422.609375,78L447.609375,78L472.609375,78" marker-end="url(#arrowhead12274)" style="fill:none"></path><defs><marker id="arrowhead12274" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowheadPath" style="stroke-width: 1px; stroke-dasharray: 1px, 0px;"></path></marker></defs></g></g><g class="edgeLabels"><g class="edgeLabel" transform="" style="opacity: 1;"><g transform="translate(0,0)" class="label"><rect rx="0" ry="0" width="0" height="0"></rect><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span></span></div></foreignObject></g></g><g class="edgeLabel" transform="" style="opacity: 1;"><g transform="translate(0,0)" class="label"><rect rx="0" ry="0" width="0" height="0"></rect><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span></span></div></foreignObject></g></g><g class="edgeLabel" transform="" style="opacity: 1;"><g transform="translate(0,0)" class="label"><rect rx="0" ry="0" width="0" height="0"></rect><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span></span></div></foreignObject></g></g></g><g class="nodes"><g class="node default" id="flowchart-A1-4480" transform="translate(49.1953125,30.5)" style="opacity: 1;"><rect rx="0" ry="0" x="-41.1953125" y="-22.5" width="82.390625" height="45" class="label-container"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-31.1953125,-12.5)"><foreignObject width="62.390625" height="25"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;">Platform</div></foreignObject></g></g></g><g class="node default" id="flowchart-A2-4481" transform="translate(49.1953125,125.5)" style="opacity: 1;"><rect rx="0" ry="0" x="-38.5234375" y="-22.5" width="77.046875" height="45" class="label-container"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-28.5234375,-12.5)"><foreignObject width="57.046875" height="25"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;">ChatBot</div></foreignObject></g></g></g><g class="node default" id="flowchart-B-4482" transform="translate(281.5,78)" style="opacity: 1;"><rect rx="0" ry="0" x="-41.109375" y="-22.5" width="82.21875" height="45" class="label-container"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-31.109375,-12.5)"><foreignObject width="62.21875" height="25"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;">REST API</div></foreignObject></g></g></g><g class="node default" id="flowchart-id1-4483" label-offset-y="10.164305318596544" transform="translate(515.4296875,78)" style="opacity: 1;"><path d="M 0,10.164305318596544 a 42.8203125,10.164305318596544 0,0,0 85.640625 0 a 42.8203125,10.164305318596544 0,0,0 -85.640625 0 l 0,55.16430531859655 a 42.8203125,10.164305318596544 0,0,0 85.640625 0 l 0,-55.16430531859655" transform="translate(-42.8203125,-37.74645797789482)" class="label-container"></path><g class="label" transform="translate(0,0)"><g transform="translate(-32.8203125,-12.5)"><foreignObject width="65.640625" height="25"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;">DataBase</div></foreignObject></g></g></g></g></g></g></svg></div><p><span>Definitely a continuous process during the entire first stage.</span></p><p><span>Explanation:</span></p><ul><li><strong><span>Platform</span></strong><span> is a web site where employees can fill in data. </span></li><li><strong><span>ChatBot</span></strong><span> is a simple chat assistant that allows to fill in questionnaire (Slack, Rocketchat or Jira). </span></li><li><strong><span>REST API</span></strong><span>  is an API that handles requests and puts them into our AWS DataBase.</span></li><li><strong><span>DataBase</span></strong><span> is a data base where all our data kept until further steps are taken (PostgreSQL).</span></li></ul><h3><a name="data-journey-the-2st-stage-final" class="md-header-anchor"></a><span>Data journey: the 2st stage (final)</span></h3><div class="md-diagram-panel"><svg id="mermaidChart281" width="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="151.15553283691406" style="max-width: 1155.640625px; height: 191.15553283691406px;" viewBox="-8 -8 1155.640625 151.15553283691406" class="md-require-zoom-fix"><style>#mermaidChart281{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;fill:#333333;}#mermaidChart281 .error-icon{fill:hsl(60,100%,100%);}#mermaidChart281 .error-text{fill:rgb(0,0,0);stroke:rgb(0,0,0);}#mermaidChart281 .edge-thickness-normal{stroke-width:2px;}#mermaidChart281 .edge-thickness-thick{stroke-width:3.5px;}#mermaidChart281 .edge-pattern-solid{stroke-dasharray:0;}#mermaidChart281 .edge-pattern-dashed{stroke-dasharray:3;}#mermaidChart281 .edge-pattern-dotted{stroke-dasharray:2;}#mermaidChart281 .marker{fill:#000000;}#mermaidChart281 .marker.cross{stroke:#000000;}#mermaidChart281 svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;}#mermaidChart281 .label{font-family:"trebuchet ms",verdana,arial,sans-serif;color:#333;}#mermaidChart281 .label text{fill:#333;}#mermaidChart281 .node rect,#mermaidChart281 .node circle,#mermaidChart281 .node ellipse,#mermaidChart281 .node polygon,#mermaidChart281 .node path{fill:#ECECFF;stroke:hsl(240,60%,86.2745098039%);stroke-width:1px;}#mermaidChart281 .node .label{text-align:center;}#mermaidChart281 .node.clickable{cursor:pointer;}#mermaidChart281 .arrowheadPath{fill:undefined;}#mermaidChart281 .edgePath .path{stroke:#000000;stroke-width:1.5px;}#mermaidChart281 .flowchart-link{stroke:#000000;fill:none;}#mermaidChart281 .edgeLabel{background-color:#f4f4f4;text-align:center;}#mermaidChart281 .edgeLabel rect{opacity:0.5;background-color:#f4f4f4;fill:#f4f4f4;}#mermaidChart281 .cluster rect{fill:hsl(60,100%,100%);stroke:hsl(60,60%,90%);stroke-width:1px;}#mermaidChart281 .cluster text{fill:rgb(0,0,0);}#mermaidChart281 div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:12px;background:hsl(60,100%,100%);border:1px solid undefined;border-radius:2px;pointer-events:none;z-index:100;}#mermaidChart281:root{--mermaid-font-family:sans-serif;}#mermaidChart281:root{--mermaid-alt-font-family:sans-serif;}#mermaidChart281 flowchart{fill:apa;}</style><g><g class="output"><g class="clusters"></g><g class="edgePaths"><g class="edgePath LS-id1 LE-eda" id="L-id1-eda" style="opacity: 1;"><path class="path" d="M93.640625,41.097857389701645L118.640625,30.5L143.640625,30.5L168.640625,30.5L193.640625,30.5" marker-end="url(#arrowhead12349)" style="fill:none"></path><defs><marker id="arrowhead12349" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowheadPath" style="stroke-width: 1px; stroke-dasharray: 1px, 0px;"></path></marker></defs></g><g class="edgePath LS-eda LE-etl" id="L-eda-etl" style="opacity: 1;"><path class="path" d="M241.46875,48.57388818890423L266.46875,67.4685115814209L291.46875,67.4685115814209L316.46875,67.4685115814209L341.46875,82.44734583736359" marker-end="url(#arrowhead12350)" style="fill:none"></path><defs><marker id="arrowhead12350" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowheadPath" style="stroke-width: 1px; stroke-dasharray: 1px, 0px;"></path></marker></defs></g><g class="edgePath LS-id1 LE-etl" id="L-id1-etl" style="opacity: 1;"><path class="path" d="M93.640625,78.74062060903482L118.640625,106.2185115814209L143.640625,106.2185115814209L168.640625,106.2185115814209L217.5546875,106.2185115814209L266.46875,106.2185115814209L291.46875,106.2185115814209L316.46875,106.2185115814209L341.46875,101.00848227500605" marker-end="url(#arrowhead12351)" style="fill:none"></path><defs><marker id="arrowhead12351" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowheadPath" style="stroke-width: 1px; stroke-dasharray: 1px, 0px;"></path></marker></defs></g><g class="edgePath LS-etl LE-id2" id="L-etl-id2" style="opacity: 1;"><path class="path" d="M387.4375,96.2185115814209L412.4375,96.2185115814209L437.4375,96.2185115814209L462.4375,96.2185115814209L487.4375,96.2185115814209" marker-end="url(#arrowhead12352)" style="fill:none"></path><defs><marker id="arrowhead12352" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowheadPath" style="stroke-width: 1px; stroke-dasharray: 1px, 0px;"></path></marker></defs></g><g class="edgePath LS-eda LE-MT" id="L-eda-MT" style="opacity: 1;"><path class="path" d="M241.46875,25.611004631847948L266.46875,20.5L291.46875,20.5L316.46875,20.5L364.453125,20.5L412.4375,20.5L437.4375,20.5L462.4375,20.5L536.2109375,20.5L609.984375,20.5L634.984375,20.5L659.984375,20.5L694.3681955645161,36.75" marker-end="url(#arrowhead12353)" style="fill:none"></path><defs><marker id="arrowhead12353" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowheadPath" style="stroke-width: 1px; stroke-dasharray: 1px, 0px;"></path></marker></defs></g><g class="edgePath LS-id2 LE-MT" id="L-id2-MT" style="opacity: 1;"><path class="path" d="M584.984375,96.2185115814209L609.984375,96.2185115814209L634.984375,96.2185115814209L659.984375,96.2185115814209L692.0739794683059,81.75" marker-end="url(#arrowhead12354)" style="fill:none"></path><defs><marker id="arrowhead12354" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowheadPath" style="stroke-width: 1px; stroke-dasharray: 1px, 0px;"></path></marker></defs></g><g class="edgePath LS-MT LE-M" id="L-MT-M" style="opacity: 1;"><path class="path" d="M798.96875,59.25L823.96875,59.25L848.96875,59.25L873.96875,59.25L899.46875,59.75" marker-end="url(#arrowhead12355)" style="fill:none"></path><defs><marker id="arrowhead12355" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowheadPath" style="stroke-width: 1px; stroke-dasharray: 1px, 0px;"></path></marker></defs></g></g><g class="edgeLabels"><g class="edgeLabel" transform="" style="opacity: 1;"><g transform="translate(0,0)" class="label"><rect rx="0" ry="0" width="0" height="0"></rect><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span></span></div></foreignObject></g></g><g class="edgeLabel" transform="" style="opacity: 1;"><g transform="translate(0,0)" class="label"><rect rx="0" ry="0" width="0" height="0"></rect><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span></span></div></foreignObject></g></g><g class="edgeLabel" transform="" style="opacity: 1;"><g transform="translate(0,0)" class="label"><rect rx="0" ry="0" width="0" height="0"></rect><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span></span></div></foreignObject></g></g><g class="edgeLabel" transform="" style="opacity: 1;"><g transform="translate(0,0)" class="label"><rect rx="0" ry="0" width="0" height="0"></rect><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span></span></div></foreignObject></g></g><g class="edgeLabel" transform="" style="opacity: 1;"><g transform="translate(0,0)" class="label"><rect rx="0" ry="0" width="0" height="0"></rect><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span></span></div></foreignObject></g></g><g class="edgeLabel" transform="" style="opacity: 1;"><g transform="translate(0,0)" class="label"><rect rx="0" ry="0" width="0" height="0"></rect><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span></span></div></foreignObject></g></g><g class="edgeLabel" transform="" style="opacity: 1;"><g transform="translate(0,0)" class="label"><rect rx="0" ry="0" width="0" height="0"></rect><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span></span></div></foreignObject></g></g></g><g class="nodes"><g class="node default" id="flowchart-id1-4501" label-offset-y="10.164305318596544" transform="translate(50.8203125,59.25)" style="opacity: 1;"><path d="M 0,10.164305318596544 a 42.8203125,10.164305318596544 0,0,0 85.640625 0 a 42.8203125,10.164305318596544 0,0,0 -85.640625 0 l 0,55.16430531859655 a 42.8203125,10.164305318596544 0,0,0 85.640625 0 l 0,-55.16430531859655" transform="translate(-42.8203125,-37.74645797789482)" class="label-container"></path><g class="label" transform="translate(0,0)"><g transform="translate(-32.8203125,-12.5)"><foreignObject width="65.640625" height="25"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;">DataBase</div></foreignObject></g></g></g><g class="node default" id="flowchart-eda-4502" transform="translate(217.5546875,30.5)" style="opacity: 1;"><rect rx="5" ry="5" x="-23.9140625" y="-22.5" width="47.828125" height="45" class="label-container"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-13.9140625,-12.5)"><foreignObject width="27.828125" height="25"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;">EDA</div></foreignObject></g></g></g><g class="node default" id="flowchart-etl-4503" transform="translate(364.453125,96.2185115814209)" style="opacity: 1;"><rect rx="0" ry="0" x="-22.984375" y="-22.5" width="45.96875" height="45" class="label-container"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-12.984375,-12.5)"><foreignObject width="25.96875" height="25"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;">ETL</div></foreignObject></g></g></g><g class="node default" id="flowchart-MT-4504" transform="translate(741.9765625,59.25)" style="opacity: 1;"><rect rx="0" ry="0" x="-56.9921875" y="-22.5" width="113.984375" height="45" class="label-container"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-46.9921875,-12.5)"><foreignObject width="93.984375" height="25"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;">Model trainig</div></foreignObject></g></g></g><g class="node default" id="flowchart-id2-4509" label-offset-y="10.958014463245103" transform="translate(536.2109375,96.2185115814209)" style="opacity: 1;"><path d="M 0,10.958014463245103 a 48.7734375,10.958014463245103 0,0,0 97.546875 0 a 48.7734375,10.958014463245103 0,0,0 -97.546875 0 l 0,55.95801446324511 a 48.7734375,10.958014463245103 0,0,0 97.546875 0 l 0,-55.95801446324511" transform="translate(-48.7734375,-38.93702169486765)" class="label-container"></path><g class="label" transform="translate(0,0)"><g transform="translate(-38.7734375,-12.5)"><foreignObject width="77.546875" height="25"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;">DataOcean</div></foreignObject></g></g></g><g class="node default" id="flowchart-M-4517" transform="translate(1019.3046875,59.25)" style="opacity: 1;"><polygon points="11.25,0 229.421875,0 240.671875,-22.5 229.421875,-45 11.25,-45 0,-22.5" transform="translate(-120.3359375,22.5)" class="label-container"></polygon><g class="label" transform="translate(0,0)"><g transform="translate(-99.0859375,-12.5)"><foreignObject width="198.171875" height="25"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;">Model wrapped into our API</div></foreignObject></g></g></g></g></g></g></svg></div><p><span>A iterative process during the entire second stage.</span></p><p><span>Explanation:</span></p><ul><li><strong><span>EDA</span></strong><span> - explanation data analysis, includes model search. It is expected to update ETL and the Model manually.</span></li><li><strong><span>ETL</span></strong><span> - Extract, Transform and Load to another data base that we call &quot;DataOcean&quot;.</span></li><li><strong><span>DataOcean</span></strong><span> - a data base where we keep data prepared for Model training.</span></li><li><strong><span>Model Training</span></strong><span> - training model based on the entire data.</span></li></ul><h3><a name="technology-stack" class="md-header-anchor"></a><span>Technology stack</span></h3><p><span>Data Science:</span></p><ul><li><span>R - data analysis </span></li><li><span>Python due to NLP actions </span></li></ul><p><span>Data Engineering:</span></p><ul><li><span>SQL (PostgreSQL, Redshift)</span></li><li><span>AWS </span></li></ul><p><span>Web:</span></p><ul><li><span>Bootstrap</span></li><li><span>Django/Flask</span></li></ul><figure><table><thead><tr><th><span>Employee</span></th><th><span>Requirements</span></th><th><span>Salary</span></th></tr></thead><tbody><tr><td><span>Data Scientist</span></td><td><span>R (tidyverse, tidymodels, recipes), Python (NLTK, CoreNLP), REST API, Linux, AWS, SQL (Redshift, PostgreSQL)</span></td><td><span>100</span></td></tr><tr><td><span>Data/DevOps Engineer</span></td><td><span>Kafka/Spark, CI/CD, SQL (Redshift, PostgreSQL), Linux, Python, AWS,  REST API</span></td><td><span>60</span></td></tr><tr><td><span>Django Developer</span></td><td><span>Django (Flask), Bootstrap, AWS Linux, REST API</span></td><td><span>60</span></td></tr></tbody></table></figure><figure><table><thead><tr><th><span>Technology</span></th><th><span>Volume</span></th><th><span>Price</span></th></tr></thead><tbody><tr><td><span>domain name</span></td><td><span>1</span></td><td><span>20 EUR/year</span></td></tr><tr><td><span>hosting</span></td><td><span>3</span></td><td><span>30 EUR/month</span></td></tr><tr><td><span>DataBase</span></td><td><span>2 (20GB each)</span></td><td><span>3000 EUR/month</span></td></tr></tbody></table></figure><p>&nbsp;</p></div>
+<span>final report: </span><a href='https://htmlpreview.github.io/?https://raw.githubusercontent.com/ElijahOzhmegov/mental_health_analysis/master/main.html'><span>R report</span></a></p><h2><a name="business-value-section" class="md-header-anchor"></a><span>Business Value section</span></h2><p><span>report: </span><a href='https://htmlpreview.github.io/?https://raw.githubusercontent.com/ElijahOzhmegov/mental_health_analysis/master/README.html'><span>html report</span></a></p><p><span>Here will be presented Technical Design and Implementation. </span></p><h3><a name="data-journey-the-1st-stage" class="md-header-anchor"></a><span>Data journey: the 1st stage</span></h3><div class="md-diagram-panel"><svg id="mermaidChart296" width="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="166" style="max-width: 574.25px; height: 206px;" viewBox="-8 -8 574.25 166" class="md-require-zoom-fix"><style>#mermaidChart296{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;fill:#333;}#mermaidChart296 .error-icon{fill:#e8e8e8;}#mermaidChart296 .error-text{fill:#f1908e;stroke:#f1908e;}#mermaidChart296 .edge-thickness-normal{stroke-width:2px;}#mermaidChart296 .edge-thickness-thick{stroke-width:3.5px;}#mermaidChart296 .edge-pattern-solid{stroke-dasharray:0;}#mermaidChart296 .edge-pattern-dashed{stroke-dasharray:3;}#mermaidChart296 .edge-pattern-dotted{stroke-dasharray:2;}#mermaidChart296 .marker{fill:#9370DB;}#mermaidChart296 .marker.cross{stroke:#9370DB;}#mermaidChart296 svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;}#mermaidChart296 .label{font-family:"trebuchet ms",verdana,arial,sans-serif;color:#333;}#mermaidChart296 .label text{fill:#333;}#mermaidChart296 .node rect,#mermaidChart296 .node circle,#mermaidChart296 .node ellipse,#mermaidChart296 .node polygon,#mermaidChart296 .node path{fill:#BDD5EA;stroke:hsl(208,11.724137931%,72.9411764706%);stroke-width:1px;}#mermaidChart296 .node .label{text-align:center;}#mermaidChart296 .node.clickable{cursor:pointer;}#mermaidChart296 .arrowheadPath{fill:#b8bfc6;}#mermaidChart296 .edgePath .path{stroke:#9370DB;stroke-width:1.5px;}#mermaidChart296 .flowchart-link{stroke:#9370DB;fill:none;}#mermaidChart296 .edgeLabel{background-color:#f4f4f4;text-align:center;}#mermaidChart296 .edgeLabel rect{opacity:0.5;background-color:#f4f4f4;fill:#f4f4f4;}#mermaidChart296 .cluster rect{fill:#e8e8e8;stroke:hsl(0,0%,80.9803921569%);stroke-width:1px;}#mermaidChart296 .cluster text{fill:#b8bfc6;}#mermaidChart296 div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:12px;background:#e8e8e8;border:1px solid undefined;border-radius:2px;pointer-events:none;z-index:100;}#mermaidChart296:root{--mermaid-font-family:sans-serif;}#mermaidChart296:root{--mermaid-alt-font-family:sans-serif;}#mermaidChart296 flowchart{fill:apa;}</style><g><g class="output"><g class="clusters"></g><g class="edgePaths"><g class="edgePath LS-A1 LE-B" id="L-A1-B" style="opacity: 1;"><path class="path" d="M90.390625,31L115.390625,31L140.390625,31L165.390625,31L190.390625,31L215.390625,31L249.82259114583334,56" marker-end="url(#arrowhead12892)" style=" stroke-width: 3.5px;fill:none"></path><defs><marker id="arrowhead12892" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowheadPath" style="stroke-width: 1px; stroke-dasharray: 1px, 0px;"></path></marker></defs></g><g class="edgePath LS-A2 LE-B" id="L-A2-B" style="opacity: 1;"><path class="path" d="M87.71875,127L115.390625,127L140.390625,127L165.390625,127L190.390625,127L215.390625,127L249.82259114583334,102" marker-end="url(#arrowhead12893)" style=" stroke-width: 3.5px;fill:none"></path><defs><marker id="arrowhead12893" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowheadPath" style="stroke-width: 1px; stroke-dasharray: 1px, 0px;"></path></marker></defs></g><g class="edgePath LS-B LE-id1" id="L-B-id1" style="opacity: 1;"><path class="path" d="M322.609375,79L347.609375,79L372.609375,79L397.609375,79L422.609375,79L447.609375,79L472.609375,79" marker-end="url(#arrowhead12894)" style="fill:none"></path><defs><marker id="arrowhead12894" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowheadPath" style="stroke-width: 1px; stroke-dasharray: 1px, 0px;"></path></marker></defs></g></g><g class="edgeLabels"><g class="edgeLabel" transform="" style="opacity: 1;"><g transform="translate(0,0)" class="label"><rect rx="0" ry="0" width="0" height="0"></rect><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span></span></div></foreignObject></g></g><g class="edgeLabel" transform="" style="opacity: 1;"><g transform="translate(0,0)" class="label"><rect rx="0" ry="0" width="0" height="0"></rect><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span></span></div></foreignObject></g></g><g class="edgeLabel" transform="" style="opacity: 1;"><g transform="translate(0,0)" class="label"><rect rx="0" ry="0" width="0" height="0"></rect><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span></span></div></foreignObject></g></g></g><g class="nodes"><g class="node default" id="flowchart-A1-4690" transform="translate(49.1953125,31)" style="opacity: 1;"><rect rx="0" ry="0" x="-41.1953125" y="-23" width="82.390625" height="46" class="label-container"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-31.1953125,-13)"><foreignObject width="62.390625" height="26"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;">Platform</div></foreignObject></g></g></g><g class="node default" id="flowchart-A2-4691" transform="translate(49.1953125,127)" style="opacity: 1;"><rect rx="0" ry="0" x="-38.5234375" y="-23" width="77.046875" height="46" class="label-container"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-28.5234375,-13)"><foreignObject width="57.046875" height="26"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;">ChatBot</div></foreignObject></g></g></g><g class="node default" id="flowchart-B-4692" transform="translate(281.5,79)" style="opacity: 1;"><rect rx="0" ry="0" x="-41.109375" y="-23" width="82.21875" height="46" class="label-container"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-31.109375,-13)"><foreignObject width="62.21875" height="26"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;">REST API</div></foreignObject></g></g></g><g class="node default" id="flowchart-id1-4693" label-offset-y="10.164305318596544" transform="translate(515.4296875,79)" style="opacity: 1;"><path d="M 0,10.164305318596544 a 42.8203125,10.164305318596544 0,0,0 85.640625 0 a 42.8203125,10.164305318596544 0,0,0 -85.640625 0 l 0,56.16430531859655 a 42.8203125,10.164305318596544 0,0,0 85.640625 0 l 0,-56.16430531859655" transform="translate(-42.8203125,-38.24645797789482)" class="label-container"></path><g class="label" transform="translate(0,0)"><g transform="translate(-32.8203125,-13)"><foreignObject width="65.640625" height="26"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;">DataBase</div></foreignObject></g></g></g></g></g></g></svg></div><p><span>Definitely a continuous process during the entire first stage.</span></p><p><span>Explanation:</span></p><ul><li><strong><span>Platform</span></strong><span> is a web site where employees can fill in data. </span></li><li><strong><span>ChatBot</span></strong><span> is a simple chat assistant that allows to fill in questionnaire (Slack, Rocketchat or Jira). </span></li><li><strong><span>REST API</span></strong><span>  is an API that handles requests and puts them into our AWS DataBase.</span></li><li><strong><span>DataBase</span></strong><span> is a data base where all our data kept until further steps are taken (PostgreSQL).</span></li></ul><h3><a name="data-journey-the-2st-stage-final" class="md-header-anchor"></a><span>Data journey: the 2st stage (final)</span></h3><div class="md-diagram-panel"><svg id="mermaidChart297" width="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="152.65553283691406" style="max-width: 1156.140625px; height: 192.65553283691406px;" viewBox="-8 -8 1156.140625 152.65553283691406" class="md-require-zoom-fix"><style>#mermaidChart297{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;fill:#333;}#mermaidChart297 .error-icon{fill:#e8e8e8;}#mermaidChart297 .error-text{fill:#f1908e;stroke:#f1908e;}#mermaidChart297 .edge-thickness-normal{stroke-width:2px;}#mermaidChart297 .edge-thickness-thick{stroke-width:3.5px;}#mermaidChart297 .edge-pattern-solid{stroke-dasharray:0;}#mermaidChart297 .edge-pattern-dashed{stroke-dasharray:3;}#mermaidChart297 .edge-pattern-dotted{stroke-dasharray:2;}#mermaidChart297 .marker{fill:#9370DB;}#mermaidChart297 .marker.cross{stroke:#9370DB;}#mermaidChart297 svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;}#mermaidChart297 .label{font-family:"trebuchet ms",verdana,arial,sans-serif;color:#333;}#mermaidChart297 .label text{fill:#333;}#mermaidChart297 .node rect,#mermaidChart297 .node circle,#mermaidChart297 .node ellipse,#mermaidChart297 .node polygon,#mermaidChart297 .node path{fill:#BDD5EA;stroke:hsl(208,11.724137931%,72.9411764706%);stroke-width:1px;}#mermaidChart297 .node .label{text-align:center;}#mermaidChart297 .node.clickable{cursor:pointer;}#mermaidChart297 .arrowheadPath{fill:#b8bfc6;}#mermaidChart297 .edgePath .path{stroke:#9370DB;stroke-width:1.5px;}#mermaidChart297 .flowchart-link{stroke:#9370DB;fill:none;}#mermaidChart297 .edgeLabel{background-color:#f4f4f4;text-align:center;}#mermaidChart297 .edgeLabel rect{opacity:0.5;background-color:#f4f4f4;fill:#f4f4f4;}#mermaidChart297 .cluster rect{fill:#e8e8e8;stroke:hsl(0,0%,80.9803921569%);stroke-width:1px;}#mermaidChart297 .cluster text{fill:#b8bfc6;}#mermaidChart297 div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:12px;background:#e8e8e8;border:1px solid undefined;border-radius:2px;pointer-events:none;z-index:100;}#mermaidChart297:root{--mermaid-font-family:sans-serif;}#mermaidChart297:root{--mermaid-alt-font-family:sans-serif;}#mermaidChart297 flowchart{fill:apa;}</style><g><g class="output"><g class="clusters"></g><g class="edgePaths"><g class="edgePath LS-id1 LE-eda" id="L-id1-eda" style="opacity: 1;"><path class="path" d="M93.640625,41.69001267135123L118.640625,31L143.640625,31L168.640625,31L193.640625,31" marker-end="url(#arrowhead12969)" style="fill:none"></path><defs><marker id="arrowhead12969" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowheadPath" style="stroke-width: 1px; stroke-dasharray: 1px, 0px;"></path></marker></defs></g><g class="edgePath LS-eda LE-etl" id="L-eda-etl" style="opacity: 1;"><path class="path" d="M241.46875,49.19611307310803L266.46875,68.2185115814209L291.46875,68.2185115814209L316.46875,68.2185115814209L341.46875,83.32759657002396" marker-end="url(#arrowhead12970)" style="fill:none"></path><defs><marker id="arrowhead12970" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowheadPath" style="stroke-width: 1px; stroke-dasharray: 1px, 0px;"></path></marker></defs></g><g class="edgePath LS-id1 LE-etl" id="L-id1-etl" style="opacity: 1;"><path class="path" d="M93.640625,79.64846532738525L118.640625,107.2185115814209L143.640625,107.2185115814209L168.640625,107.2185115814209L217.5546875,107.2185115814209L266.46875,107.2185115814209L291.46875,107.2185115814209L316.46875,107.2185115814209L341.46875,102.00848227500605" marker-end="url(#arrowhead12971)" style="fill:none"></path><defs><marker id="arrowhead12971" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowheadPath" style="stroke-width: 1px; stroke-dasharray: 1px, 0px;"></path></marker></defs></g><g class="edgePath LS-etl LE-id2" id="L-etl-id2" style="opacity: 1;"><path class="path" d="M387.4375,97.2185115814209L412.4375,97.2185115814209L437.4375,97.2185115814209L462.4375,97.2185115814209L487.4375,97.2185115814209" marker-end="url(#arrowhead12972)" style="fill:none"></path><defs><marker id="arrowhead12972" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowheadPath" style="stroke-width: 1px; stroke-dasharray: 1px, 0px;"></path></marker></defs></g><g class="edgePath LS-eda LE-MT" id="L-eda-MT" style="opacity: 1;"><path class="path" d="M241.46875,26.111004631847948L266.46875,21L291.46875,21L316.46875,21L364.453125,21L412.4375,21L437.4375,21L462.4375,21L536.2109375,21L609.984375,21L634.984375,21L659.984375,21L693.6221955128206,37" marker-end="url(#arrowhead12973)" style="fill:none"></path><defs><marker id="arrowhead12973" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowheadPath" style="stroke-width: 1px; stroke-dasharray: 1px, 0px;"></path></marker></defs></g><g class="edgePath LS-id2 LE-MT" id="L-id2-MT" style="opacity: 1;"><path class="path" d="M584.984375,97.2185115814209L609.984375,97.2185115814209L634.984375,97.2185115814209L659.984375,97.2185115814209L691.3076820861636,83" marker-end="url(#arrowhead12974)" style="fill:none"></path><defs><marker id="arrowhead12974" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowheadPath" style="stroke-width: 1px; stroke-dasharray: 1px, 0px;"></path></marker></defs></g><g class="edgePath LS-MT LE-M" id="L-MT-M" style="opacity: 1;"><path class="path" d="M798.96875,60L823.96875,60L848.96875,60L873.96875,60L899.46875,60.5" marker-end="url(#arrowhead12975)" style="fill:none"></path><defs><marker id="arrowhead12975" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowheadPath" style="stroke-width: 1px; stroke-dasharray: 1px, 0px;"></path></marker></defs></g></g><g class="edgeLabels"><g class="edgeLabel" transform="" style="opacity: 1;"><g transform="translate(0,0)" class="label"><rect rx="0" ry="0" width="0" height="0"></rect><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span></span></div></foreignObject></g></g><g class="edgeLabel" transform="" style="opacity: 1;"><g transform="translate(0,0)" class="label"><rect rx="0" ry="0" width="0" height="0"></rect><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span></span></div></foreignObject></g></g><g class="edgeLabel" transform="" style="opacity: 1;"><g transform="translate(0,0)" class="label"><rect rx="0" ry="0" width="0" height="0"></rect><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span></span></div></foreignObject></g></g><g class="edgeLabel" transform="" style="opacity: 1;"><g transform="translate(0,0)" class="label"><rect rx="0" ry="0" width="0" height="0"></rect><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span></span></div></foreignObject></g></g><g class="edgeLabel" transform="" style="opacity: 1;"><g transform="translate(0,0)" class="label"><rect rx="0" ry="0" width="0" height="0"></rect><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span></span></div></foreignObject></g></g><g class="edgeLabel" transform="" style="opacity: 1;"><g transform="translate(0,0)" class="label"><rect rx="0" ry="0" width="0" height="0"></rect><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span></span></div></foreignObject></g></g><g class="edgeLabel" transform="" style="opacity: 1;"><g transform="translate(0,0)" class="label"><rect rx="0" ry="0" width="0" height="0"></rect><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span></span></div></foreignObject></g></g></g><g class="nodes"><g class="node default" id="flowchart-id1-4711" label-offset-y="10.164305318596544" transform="translate(50.8203125,60)" style="opacity: 1;"><path d="M 0,10.164305318596544 a 42.8203125,10.164305318596544 0,0,0 85.640625 0 a 42.8203125,10.164305318596544 0,0,0 -85.640625 0 l 0,56.16430531859655 a 42.8203125,10.164305318596544 0,0,0 85.640625 0 l 0,-56.16430531859655" transform="translate(-42.8203125,-38.24645797789482)" class="label-container"></path><g class="label" transform="translate(0,0)"><g transform="translate(-32.8203125,-13)"><foreignObject width="65.640625" height="26"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;">DataBase</div></foreignObject></g></g></g><g class="node default" id="flowchart-eda-4712" transform="translate(217.5546875,31)" style="opacity: 1;"><rect rx="5" ry="5" x="-23.9140625" y="-23" width="47.828125" height="46" class="label-container"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-13.9140625,-13)"><foreignObject width="27.828125" height="26"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;">EDA</div></foreignObject></g></g></g><g class="node default" id="flowchart-etl-4713" transform="translate(364.453125,97.2185115814209)" style="opacity: 1;"><rect rx="0" ry="0" x="-22.984375" y="-23" width="45.96875" height="46" class="label-container"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-12.984375,-13)"><foreignObject width="25.96875" height="26"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;">ETL</div></foreignObject></g></g></g><g class="node default" id="flowchart-MT-4714" transform="translate(741.9765625,60)" style="opacity: 1;"><rect rx="0" ry="0" x="-56.9921875" y="-23" width="113.984375" height="46" class="label-container"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-46.9921875,-13)"><foreignObject width="93.984375" height="26"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;">Model trainig</div></foreignObject></g></g></g><g class="node default" id="flowchart-id2-4719" label-offset-y="10.958014463245103" transform="translate(536.2109375,97.2185115814209)" style="opacity: 1;"><path d="M 0,10.958014463245103 a 48.7734375,10.958014463245103 0,0,0 97.546875 0 a 48.7734375,10.958014463245103 0,0,0 -97.546875 0 l 0,56.95801446324511 a 48.7734375,10.958014463245103 0,0,0 97.546875 0 l 0,-56.95801446324511" transform="translate(-48.7734375,-39.43702169486765)" class="label-container"></path><g class="label" transform="translate(0,0)"><g transform="translate(-38.7734375,-13)"><foreignObject width="77.546875" height="26"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;">DataOcean</div></foreignObject></g></g></g><g class="node default" id="flowchart-M-4727" transform="translate(1019.5546875,60)" style="opacity: 1;"><polygon points="11.5,0 229.671875,0 241.171875,-23 229.671875,-46 11.5,-46 0,-23" transform="translate(-120.5859375,23)" class="label-container"></polygon><g class="label" transform="translate(0,0)"><g transform="translate(-99.0859375,-13)"><foreignObject width="198.171875" height="26"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;">Model wrapped into our API</div></foreignObject></g></g></g></g></g></g></svg></div><p><span>A iterative process during the entire second stage.</span></p><p><span>Explanation:</span></p><ul><li><strong><span>EDA</span></strong><span> - explanation data analysis, includes model search. It is expected to update ETL and the Model manually.</span></li><li><strong><span>ETL</span></strong><span> - Extract, Transform and Load to another data base that we call &quot;DataOcean&quot;.</span></li><li><strong><span>DataOcean</span></strong><span> - a data base where we keep data prepared for Model training.</span></li><li><strong><span>Model Training</span></strong><span> - training model based on the entire data.</span></li></ul><h3><a name="technology-stack" class="md-header-anchor"></a><span>Technology stack</span></h3><p><span>Data Science:</span></p><ul><li><span>R - data analysis </span></li><li><span>Python due to NLP actions </span></li></ul><p><span>Data Engineering:</span></p><ul><li><span>SQL (PostgreSQL, Redshift)</span></li><li><span>AWS </span></li></ul><p><span>Web:</span></p><ul><li><span>Bootstrap</span></li><li><span>Django/Flask</span></li></ul><figure><table><thead><tr><th><span>Employee</span></th><th><span>Requirements</span></th><th><span>Salary</span></th></tr></thead><tbody><tr><td><span>Data Scientist</span></td><td><span>R (tidyverse, tidymodels, recipes), Python (NLTK, CoreNLP), REST API, Linux, AWS, SQL (Redshift, PostgreSQL)</span></td><td><span>100</span></td></tr><tr><td><span>Data/DevOps Engineer</span></td><td><span>Kafka/Spark, CI/CD, SQL (Redshift, PostgreSQL), Linux, Python, AWS,  REST API</span></td><td><span>60</span></td></tr><tr><td><span>Django Developer</span></td><td><span>Django (Flask), Bootstrap, AWS Linux, REST API</span></td><td><span>60</span></td></tr></tbody></table></figure><figure><table><thead><tr><th><span>Technology</span></th><th><span>Volume</span></th><th><span>Total Price</span></th></tr></thead><tbody><tr><td><span>domain name</span></td><td><span>1</span></td><td><span>20 EUR/year</span></td></tr><tr><td><span>hosting</span></td><td><span>3</span></td><td><span>30 EUR/month</span></td></tr><tr><td><span>DataBase</span></td><td><span>2 (30GB each)</span></td><td><span>3000 EUR/month</span></td></tr><tr><td><span>RStudio Connect</span></td><td><span>1 (APIs, RMarkdown, EDA)</span></td><td><span>1700 EUR/month</span></td></tr></tbody></table></figure><p>&nbsp;</p></div>
 </body>
 </html>

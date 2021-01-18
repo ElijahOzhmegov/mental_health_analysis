@@ -80,9 +80,10 @@ Web:
 | Data/DevOps Engineer | Kafka/Spark, CI/CD, SQL (Redshift, PostgreSQL), Linux, Python, AWS,  REST API | 60 |
 | Django Developer | Django (Flask), Bootstrap, AWS Linux, REST API | 60 |
 
-| Technology | Volume | Price |
+| Technology | Volume | Total Price |
 | ---- | ---- | ---- |
 | domain name | 1 | 20 EUR/year |
 | hosting | 3 | 30 EUR/month |
-| DataBase | 2 (20GB each) | 3000 EUR/month |
+| DataBase | 2 (30GB each) | 3000 EUR/month |
+| RStudio Connect | 1 (APIs, RMarkdown, EDA) | 1700 EUR/month |
 

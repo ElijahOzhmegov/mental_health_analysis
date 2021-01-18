@@ -64,7 +64,7 @@ Explanation:
 
 Data Science:
 * R - data analysis 
-* Python - an actual model due to NLP actions 
+* Python due to NLP actions 
 
 Data Engineering:
 * SQL (PostgreSQL, Redshift)
@@ -76,4 +76,13 @@ Web:
 
 | Employee | Requirements | Salary |
 | ---- | ---- | ---- |
-| Employee | Requirements | Salary |
+| Data Scientist | R (tidyverse, tidymodels, recipes), Python (NLTK, CoreNLP), REST API, Linux, AWS, SQL (Redshift, PostgreSQL)| 100 |
+| Data/DevOps Engineer | Kafka/Spark, CI/CD, SQL (Redshift, PostgreSQL), Linux, Python, AWS,  REST API | 60 |
+| Django Developer | Django (Flask), Bootstrap, AWS Linux, REST API | 60 |
+
+| Technology | Volume | Price |
+| ---- | ---- | ---- |
+| domain name | 1 | 20 EUR/year |
+| hosting | 3 | 30 EUR/month |
+| DataBase | 2 (20GB each) | 3000 EUR/month |
+

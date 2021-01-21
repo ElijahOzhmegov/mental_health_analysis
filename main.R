@@ -206,8 +206,8 @@ print(boruta.df)
     tosave = TRUE
     { # Plot feature importance whisker plot
         if(tosave){
-#             png(filename="pics/feature_importance.png", width=1280,height=720)
-            svg(filename="pics/feature_importance.svg", width=16, height=9)
+             png(filename="pics/feature_importance.png", width=1280,height=720)
+            #png(filename="pics/feature_importance.png", width=16, height=9)
 
             ticks_cex = 2
             title_cex = 3
@@ -263,7 +263,7 @@ library(ggcorrplot)
       ) +
     ggtitle("Correlation Matrix") +
     theme(plot.title = element_text(size = 20, hjust = 0.5))
-    if(tosave)ggsave("pics/correlation_matrix_without_county.svg")
+    if(tosave)ggsave("pics/correlation_matrix_without_county.png")
 
 }
 
@@ -361,7 +361,7 @@ df_cv <- vfold_cv(df_train, strata=treatment, v=5)
 
         rf_penalty_plot = gridExtra::grid.arrange(rf_plot_trees, rf_plot_min_n, nrow = 2) 
         rf_penalty_plot # just to show the plot
-        plot_path = glue::glue("pics/", "random_forest_penalty_plot.svg")
+        plot_path = glue::glue("pics/", "random_forest_penalty_plot.png")
         if(tosave) ggsave(plot_path, plot=rf_penalty_plot)
 
     }
@@ -378,32 +378,32 @@ df_cv <- vfold_cv(df_train, strata=treatment, v=5)
     }
 
     { # ROC and AUC
-    { # calculate AUC
-        roc_obj = rf_fit %>% 
-            collect_predictions() %>% 
-            pROC::roc(treatment, .pred_Yes)
-        auc_metric = pROC::auc(roc_obj)[[1]]
+        { # calculate AUC
+            roc_obj = rf_fit %>% 
+                collect_predictions() %>% 
+                pROC::roc(treatment, .pred_Yes)
+            auc_metric = pROC::auc(roc_obj)[[1]]
 
-    }
+        }
 
-    { # draw ROC
-        rf_auc <- rf_fit %>% collect_predictions() %>% 
-            roc_curve(treatment, .pred_No) %>% 
-            mutate(model = "Random Forest")
+        { # draw ROC
+            rf_auc <- rf_fit %>% collect_predictions() %>% 
+                roc_curve(treatment, .pred_No) %>% 
+                mutate(model = "Random Forest")
 
-        plot_title = paste("Random Forest: AUC", 
-                           round(auc_metric, 3),
-                           collapse=" ")
+            plot_title = paste("Random Forest: AUC", 
+                               round(auc_metric, 3),
+                               collapse=" ")
 
-        rf_roc_plot <- autoplot(rf_auc) + 
-            ggtitle(plot_title) + 
-            theme(plot.title = element_text(size = 20, hjust = 0.5))
+            rf_roc_plot <- autoplot(rf_auc) + 
+                ggtitle(plot_title) + 
+                theme(plot.title = element_text(size = 20, hjust = 0.5))
 
-        rf_roc_plot
-        plot_path = glue::glue("pics/", 
-                               "random_forest_roc_plot.svg")
-        if(tosave) ggsave(plot_path, plot=rf_roc_plot)
-    }
+            rf_roc_plot
+            plot_path = glue::glue("pics/", 
+                                   "random_forest_roc_plot.png")
+            if(tosave) ggsave(plot_path, plot=rf_roc_plot)
+        }
 
     }
 
@@ -422,7 +422,7 @@ df_cv <- vfold_cv(df_train, strata=treatment, v=5)
         rf_val_dist
 
         plot_path = glue::glue("pics/", 
-                               "random_forest_validation_distribution.svg")
+                               "random_forest_validation_distribution.png")
         if(tosave) ggsave(plot_path, plot=rf_val_dist)
 
 

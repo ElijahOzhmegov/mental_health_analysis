@@ -446,117 +446,155 @@ df_cv <- vfold_cv(df_train, strata=treatment, v=5)
 }
 
 
-# 
-# SVM
-# 
+{ # SVM
 
-{ # svm model
-    svm_recipe <- df %>% 
-        recipe(treatment ~ .)  %>% 
-        step_zv(all_predictors()) #%>% 
-#         step_lincomb(all_numeric())
+    { # define recipe and model, and train model
+        svm_recipe <- df.train %>% 
+            recipe(treatment ~ .)  %>% 
+            step_zv(all_numeric()) %>% 
+            step_lincomb(all_numeric()) %>% 
+            step_normalize(all_numeric())
 
 
-    svm_model <-
-        svm_rbf(cost = tune(), rbf_sigma = tune()) %>%
-        set_mode("classification") %>%
-        set_engine("kernlab")
+        svm_model <-
+            svm_rbf(cost = tune(), rbf_sigma = tune()) %>%
+            set_mode("classification") %>%
+            set_engine("kernlab")
 
-    svm_workflow <- workflow() %>% 
-        add_recipe(svm_recipe) %>% 
-        add_model(svm_model)
+        svm_workflow <- workflow() %>% 
+            add_recipe(svm_recipe) %>% 
+            add_model(svm_model)
 
-    ctrl <- control_grid(verbose = TRUE, save_pred = TRUE)
+        svm_grid <- grid_regular(cost(range = c(0, 4)),
+                                 rbf_sigma(range = c(-5, 1)),
+                                 levels = 6
+        )
+        ctrl <- control_grid(verbose = TRUE, save_pred = TRUE)
 
-    svm_tune_results <- svm_workflow %>% 
-      tune_grid(resamples = df_cv,
-        metrics = metric_set(accuracy, roc_auc),
-        control = ctrl
-      )
+        doParallel::registerDoParallel()
+        svm_tune_results <- svm_workflow %>% 
+            tune_grid(resamples = df_cv,
+                      grid      = svm_grid,
+                      metrics   = metric_set(bal_accuracy, recall, roc_auc),
+                      control = ctrl
+          )
 
+    }
+    { # plot the penalty plot
+
+        plot_title = paste("SVM penalty plot", 
+                           collapse=" ")
+        svm_plot_cost  <- 
+            svm_tune_results %>% 
+            collect_metrics() %>% 
+            ggplot(aes(x = cost, y = mean)) +
+            geom_point() +
+            geom_line() +
+            facet_wrap(~.metric) +
+            theme_bw() +
+            ggtitle(plot_title) +
+            theme(plot.title = element_text(size = 20, hjust = 0.5))
+
+        svm_plot_sigma  <- 
+            svm_tune_results %>% 
+            collect_metrics() %>% 
+            ggplot(aes(x = rbf_sigma, y = mean)) +
+            geom_point() +
+            geom_line() +
+            facet_wrap(~.metric) +
+            scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
+                          labels = trans_format("log10", math_format(10^.x))) +
+            theme_bw() 
+
+        svm_penalty_plot = gridExtra::grid.arrange(svm_plot_cost, svm_plot_sigma, nrow = 2)
+        plot_path = glue::glue("pics/", "svm_penalty_plot.png")
+        if(tosave) ggsave(plot_path, plot=svm_penalty_plot)
+
+    }
+
+    { # choosing the best parameter and building the final model
+        param_final  <- svm_tune_results %>% 
+            select_best(metric = "roc_auc")
+
+        svm_fit  <- svm_workflow %>% 
+            finalize_workflow(param_final) %>% 
+            last_fit(df_split)
+
+        print(svm_fit$.workflow) # hyperparameters of the chosen model
+
+    }
+
+    { # ROC and AUC
+        { # calculate AUC
+            roc_obj = svm_fit %>% 
+                collect_predictions() %>% 
+                pROC::roc(treatment, .pred_Yes)
+            auc_metric = pROC::auc(roc_obj)[[1]]
+
+        }
+
+        { # draw ROC
+            svm_auc <- svm_fit %>% collect_predictions() %>% 
+                roc_curve(treatment, .pred_No) %>% 
+                mutate(model = "Support Vector Machine")
+
+            plot_title = paste("SVM: AUC", 
+                               round(auc_metric, 3),
+                               collapse=" ")
+
+            svm_roc_plot <- autoplot(svm_auc) + 
+                ggtitle(plot_title) + 
+                theme(plot.title = element_text(size = 20, hjust = 0.5))
+
+            svm_roc_plot
+            plot_path = glue::glue("pics/", 
+                                   "svm_roc_plot.png")
+            if(tosave) ggsave(plot_path, plot=svm_roc_plot)
+        }
+
+    }
+
+    { # Draw Distribution 
+        validation_predictions <- svm_fit %>% collect_predictions()
+
+        plot_title = paste("SVM, Validation Distribution", 
+                           collapse=" ")
+
+        svm_val_dist = validation_predictions %>% 
+            ggplot() +
+            geom_density(aes(x = .pred_Yes, fill = treatment), alpha=0.5) +
+            theme_bw() +
+            ggtitle(plot_title) + 
+            theme(plot.title = element_text(size = 20, hjust = 0.5))
+
+        plot_path = glue::glue("pics/", 
+                               "svm_validation_distribution.png")
+        if(tosave) ggsave(plot_path, plot=svm_val_dist)
+
+        
+    }
+
+    { # Validation Metrics
+        svm_conf_mat      = validation_predictions %>% conf_mat    (truth = treatment, estimate = .pred_class)
+
+        svm_recall        = validation_predictions %>% recall      (truth = treatment, estimate = .pred_class, event_level="second")
+        svm_accuracy      = validation_predictions %>% accuracy    (truth = treatment, estimate = .pred_class)
+        svm_fbal_accuracy = validation_predictions %>% bal_accuracy(truth = treatment, estimate = .pred_class)
+        svm_kap           = validation_predictions %>% kap         (truth = treatment, estimate = .pred_class)
+
+        svm_metrics = bind_rows(svm_recall       ,
+                                svm_accuracy     ,
+                                svm_fbal_accuracy,
+                                svm_kap          
+        )
+    }
 }
 
-{ # plot the penalty plot
-    svm_plot_cost  <- 
-        svm_tune_results %>% 
-        collect_metrics() %>% 
-#         filter(.metric == "roc_auc") %>% 
-        ggplot(aes(x = cost, y = mean)) +
-        geom_point() +
-        geom_line() +
-        facet_wrap(~.metric) +
-#         ylab("AUC the ROC Curve") +
-        theme_bw() +
-        ggtitle("Tuning regarding to Cost")
+svm_metrics
+rf_metrics
 
 
-    svm_plot_sigma  <- 
-        svm_tune_results %>% 
-        collect_metrics() %>% 
-#         filter(.metric == "roc_auc") %>% 
-        ggplot(aes(x = rbf_sigma, y = mean)) +
-        geom_point() +
-        geom_line() +
-        facet_wrap(~.metric) +
-#         ylab("AUC the ROC Curve") +
-        theme_bw() +
-        ggtitle("Tuning regarding to Sigma")
-
-    gridExtra::grid.arrange(svm_plot_cost, svm_plot_sigma, nrow = 2)
-
-}
-
-{ # choosing the best parameter and building the final model
-    param_final  <- svm_tune_results %>% 
-        select_best(metric = "roc_auc")
-
-    svm_fit  <- svm_workflow %>% 
-        finalize_workflow(param_final) %>% 
-        last_fit(df_split)
-
-}
-
-{ # calculate AUC
-    install.packages("pROC")
-    roc_obj = svm_tune_results %>% 
-        collect_predictions(parameters = param_final)  %>% 
-        pROC::roc(treatment, .pred_Yes)
-    auc_metric = pROC::auc(roc_obj)[[1]]
-
-
-}
-
-{ # draw ROC
-    svm_auc <- svm_fit %>% 
-        collect_predictions() %>% 
-        roc_curve(treatment, .pred_No) %>% 
-        mutate(model = "Random Forest")
-    roc_plot <- autoplot(svm_auc) +
-        ggtitle(paste0(c("SVM model: AUC", round(auc_metric, 3)), collapse=" "))
-
-    roc_plot 
-}
-
-{ # validation
-    test_performance <- svm_fit %>% 
-        collect_metrics(); test_performance
-
-    test_predictions <- svm_fit %>% 
-        collect_predictions(); test_predictions
-
-    test_predictions %>% conf_mat(truth = treatment, estimate = .pred_class)
-
-    test_predictions %>% 
-        ggplot() +
-        geom_density(aes(x = .pred_Yes, fill = treatment), alpha=0.5) +
-        theme_bw()
-
-
-
-}
-
-
-{ # Testing
+{ # Testing, let's choose RF
     treatment_fit <- fit(rf_workflow, data=df_train)
 
     predicted = predict(treatment_fit, df_test)

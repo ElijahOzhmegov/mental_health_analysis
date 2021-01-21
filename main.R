@@ -374,7 +374,8 @@ df_cv <- vfold_cv(df_train, strata=treatment, v=5)
         rf_fit  <- rf_workflow %>% 
             finalize_workflow(param_final) %>% 
             last_fit(df_split)
-
+        rf_workflow = rf_workflow %>% 
+            finalize_workflow(param_final)
     }
 
     { # ROC and AUC
@@ -593,30 +594,34 @@ df_cv <- vfold_cv(df_train, strata=treatment, v=5)
 svm_metrics
 rf_metrics
 
+{ # final fit testing data
+    ffit = rf_workflow %>% 
+        parsnip::fit(df.train) # here we will use all the training data 
+                              # to refit it, as hparameters were already found
 
-{ # Testing, let's choose RF
-    treatment_fit <- fit(rf_workflow, data=df_train)
+        rf_final_fit = pull_workflow_fit(ffit)
 
-    predicted = predict(treatment_fit, df_test)
-    accuracy = sum(df_test$treatment == predicted)/nrow(predicted)
-    accuracy
+        predicted = predict(rf_final_fit, new_data = df.test)
+        testing_prediction = bind_cols(df.test, predicted)
+}
 
-    real = tibble(treatment = df_test$treatment) %>% 
-        mutate(treatment = as.factor(treatment))
+{ # calculate final testing metrics
+    testing_prediction = testing_prediction %>% mutate(treatment = as.factor(treatment))
 
-    c_mat = bind_cols(real, predicted) %>% 
-        conf_mat(truth = treatment, estimate = .pred_class)
+    rf_conf_mat      = testing_prediction %>% conf_mat    (truth = treatment, estimate = .pred_class)
 
-    acc = conf_mat
+    rf_recall        = testing_prediction %>% recall      (truth = treatment, estimate = .pred_class, event_level="second")
+    rf_accuracy      = testing_prediction %>% accuracy    (truth = treatment, estimate = .pred_class)
+    rf_fbal_accuracy = testing_prediction %>% bal_accuracy(truth = treatment, estimate = .pred_class)
+    rf_kap           = testing_prediction %>% kap         (truth = treatment, estimate = .pred_class)
 
 
-    library(caret) 
-    confusionMatrix(c_mat)
-    conf_matrix = matrix(c_mat$table, nrow = 2)
-    acc = sum(diag(conf_matrix) / sum(conf_matrix))
-    apply(conf_matrix, 2, sum)
-    diag(conf_matrix) / apply(conf_matrix, 2, sum) / 2
-    pre = sum(diag(conf_matrix) / apply(conf_matrix, 2, sum)) / 2
-    diag(conf_matrix)
+    rf_metrics = bind_rows(rf_recall       ,
+                           rf_accuracy     ,
+                           rf_fbal_accuracy,
+                           rf_kap          ) %>% 
+        select(-.estimator)
+
+    rf_metrics
 }
 
